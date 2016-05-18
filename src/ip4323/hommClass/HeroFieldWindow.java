@@ -21,7 +21,7 @@ public class HeroFieldWindow extends Frame {
 
         Hero hero1 = new Hero(0, 0, 0);
 
-        Unit newUnit = new Unit(1, 333);
+        Unit newUnit = new Unit(1, 999);
 
         Unit army1[] = new Unit[]{null, newUnit, null, null, null};
 
