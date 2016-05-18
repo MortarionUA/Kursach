@@ -20,7 +20,7 @@ public class MainMenu extends JFrame {
 
     private void prepareGUI() {
         mainFrame = new JFrame("Меню");
-        mainFrame.setSize(300, 400);
+        mainFrame.setSize(400, 600);
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
