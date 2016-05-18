@@ -14,20 +14,26 @@ public class HeroFieldWindow extends Frame {
 
         ScrollPane pane = new ScrollPane();
 
-        pane.setSize(640, 192);
+        pane.setSize(640, 512);
         setResizable(false);
 
         add(pane, BorderLayout.CENTER);
 
-        Hero hero = new Hero(0, 0, 0);
+        Hero hero1 = new Hero(0, 0, 0);
 
         Unit newUnit = new Unit(1, 333);
 
-        Unit army[] = new Unit[]{null, newUnit, null, null, null};
+        Unit army1[] = new Unit[]{null, newUnit, null, null, null};
 
-        hero.setAllArmy(army);
+        hero1.setAllArmy(army1);
 
-        HeroField hf = new HeroField(this, 640, 192, hero);
+        Hero hero2 = new Hero(0, 0, 0);
+
+        Unit army2[] = new Unit[]{null, newUnit, null, null, null};
+
+        hero2.setAllArmy(army2);
+
+        HeroToHeroField hf = new HeroToHeroField(this, 640, 512, hero1, hero2);
 
         pane.add(hf);
 

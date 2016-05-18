@@ -161,12 +161,9 @@ public class TownField extends Component implements Runnable, MouseListener {
                     drawNumber(grph, numbers[town.getArmy()[i-2].getCount()/100], i * tW + 16, 3 * tH + 48);
                     drawNumber(grph, numbers[town.getArmy()[i-2].getCount()%100/10], i * tW + 32, 3 * tH + 48);
                     drawNumber(grph, numbers[town.getArmy()[i-2].getCount()%10], i * tW + 48, 3 * tH + 48);
-
-
                 } else if(town.getArmy()[i-2].getCount()/10 >= 1) {
                     drawNumber(grph, numbers[town.getArmy()[i-2].getCount()/10], i * tW + 32, 3 * tH + 48);
                     drawNumber(grph, numbers[town.getArmy()[i-2].getCount()%10], i * tW + 48, 3 * tH + 48);
-
                 } else {
                     drawNumber(grph, numbers[town.getArmy()[i-2].getCount()], i * tW + 48, 3 * tH + 48);
                 }
