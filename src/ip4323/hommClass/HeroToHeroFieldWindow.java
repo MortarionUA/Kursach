@@ -7,14 +7,14 @@ import java.awt.event.WindowEvent;
 /**
  * Created by dima_ on 18.05.2016.
  */
-public class HeroFieldWindow extends Frame {
-    public HeroFieldWindow(String s) {
+public class HeroToHeroFieldWindow extends Frame {
+    public HeroToHeroFieldWindow(String s) {
 
         super(s);
 
         ScrollPane pane = new ScrollPane();
 
-        pane.setSize(640, 192);
+        pane.setSize(640, 512);
         setResizable(false);
 
         add(pane, BorderLayout.CENTER);
@@ -27,7 +27,13 @@ public class HeroFieldWindow extends Frame {
 
         hero1.setAllArmy(army1);
 
-        HeroField hf = new HeroField(this, 640, 512, hero1);
+        Hero hero2 = new Hero(0, 0, 0);
+
+        Unit army2[] = new Unit[]{null, newUnit, null, null, null};
+
+        hero2.setAllArmy(army2);
+
+        HeroToHeroField hf = new HeroToHeroField(this, 640, 512, hero1, hero2);
 
         pane.add(hf);
 

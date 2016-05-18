@@ -28,16 +28,19 @@ public class MainMenu extends JFrame {
             }
         });
         controlPanel = new JPanel();
-        controlPanel.setLayout(new GridLayout(3, 1));
+        controlPanel.setLayout(new GridLayout(6, 1));
 
         mainFrame.add(controlPanel);
         mainFrame.setVisible(true);
     }
 
     private void showButton() {
-        JButton buttonNewGame = new JButton("New Game");
+        JButton buttonBattle = new JButton("Battle");
         JButton buttonMapEditor = new JButton("Map Editor");
         JButton buttonExit = new JButton("Exit");
+        JButton buttonTown = new JButton("Town");
+        JButton buttonHero = new JButton("Hero");
+        JButton buttonHeroToHero = new JButton("HeroToHero");
 
         buttonExit.addActionListener(new ActionListener() {
             @Override
@@ -46,11 +49,34 @@ public class MainMenu extends JFrame {
             }
         });
 
-        buttonNewGame.addActionListener(new ActionListener() {
+        buttonBattle.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //new TownFieldWindow("Battle");
+                new BattleFieldWindow("BattleField");
+                mainFrame.dispose();
+            }
+        });
+
+        buttonTown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TownFieldWindow("Town");
+                mainFrame.dispose();
+            }
+        });
+
+        buttonHero.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 new HeroFieldWindow("Hero");
+                mainFrame.dispose();
+            }
+        });
+
+        buttonHeroToHero.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new HeroToHeroFieldWindow("HeroToHero");
                 mainFrame.dispose();
             }
         });
@@ -63,8 +89,11 @@ public class MainMenu extends JFrame {
             }
         });
 
-        controlPanel.add(buttonNewGame);
+        controlPanel.add(buttonBattle);
         controlPanel.add(buttonMapEditor);
+        controlPanel.add(buttonTown);
+        controlPanel.add(buttonHero);
+        controlPanel.add(buttonHeroToHero);
         controlPanel.add(buttonExit);
 
         mainFrame.setVisible(true);
