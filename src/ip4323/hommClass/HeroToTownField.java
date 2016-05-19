@@ -67,14 +67,16 @@ public class HeroToTownField extends Component implements Runnable, MouseListene
 
     public void paint(Graphics g) {
         if (grphImage == null) {
-            grphImage = (BufferedImage) createImage(576, 256);
+            grphImage = (BufferedImage) createImage(640, 512);
         }
         grph = grphImage.getGraphics();
         grph.setColor(Color.WHITE);
         grph.fillRect(0, 0, getWidth(), getHeight());
         Particle[] buildParticle = new Particle[]{Particle.BlueP_1, Particle.BlueP_2, Particle.BlueP_3, Particle.BlueP_4, Particle.BlueP_5};
-        for(int i=0; i<6; i++) {
+        for(int i=0; i<10; i++) {
             drawTile(grph, Tile.GRASS1, i * tW, 0);
+            drawTile(grph, Tile.GRASS1, i * tW, tH);
+            drawTile(grph, Tile.GRASS1, i * tW, 2 * tH);
         }
         switch (town.getBuildings()[0]) {
             case 0: drawTile(grph, Tile.TOWN, 0, tH);
@@ -122,10 +124,10 @@ public class HeroToTownField extends Component implements Runnable, MouseListene
                 drawTile(grph, Tile.BIGCASTLE_CENTER, 7 * tW, tH);
                 drawTile(grph, Tile.BIGCASTLE_RIGHT, 8 * tW, tH);
         }
-        for(int i=0; i<9; i++) {
+        for(int i=0; i<10; i++) {
             drawTile(grph, Tile.GROUND, i * tW, 2 * tH);
         }
-        for(int i=0; i<9; i++) {
+        for(int i=0; i<10; i++) {
             if((i < 2) || (i >= 7)) drawTile(grph, Tile.GROUND, i * tW, 3 * tH);
             if((i >= 2) && (i < 7)) drawTile(grph, Tile.GRASS1, i * tW, 3 * tH);
         }
@@ -167,13 +169,13 @@ public class HeroToTownField extends Component implements Runnable, MouseListene
                 }
             }
         }
-        for(int i=0; i<3; i++) {
+        for(int i=4; i<8; i++) {
             for(int j=0; j<10; j++) {
                 drawTile(grph, Tile.GROUND, j * tW, i * tH);
             }
         }
         for(int i=4; i<9; i++) {
-            drawTile(grph, Tile.GRASS1, i * tW, tH);
+            drawTile(grph, Tile.GRASS1, i * tW, 6 * tH);
         }
         UnitImg units2[] = new UnitImg[5];
         for(int i=0; i<5; i++) {
@@ -193,40 +195,40 @@ public class HeroToTownField extends Component implements Runnable, MouseListene
                 }
             }
         }
-        drawParam(grph, Params.ATTACK, 0, 0);
-        drawParam(grph, Params.DEFENSE, 0, tH);
-        drawParam(grph, Params.HP, 0, 2 * tH);
+        drawParam(grph, Params.ATTACK, 0, 5 * tH);
+        drawParam(grph, Params.DEFENSE, 0, 6 * tH);
+        drawParam(grph, Params.HP, 0, 7 * tH);
         if(hero.getDmgBonus()/10 >= 1) {
-            drawBigNumber(grph, numbersBig[hero.getDmgBonus()/10], tW, 0);
-            drawBigNumber(grph, numbersBig[hero.getDmgBonus()%10], 2 * tW, 0);
-        } else drawBigNumber(grph, numbersBig[hero.getDmgBonus()], tW, 0);
+            drawBigNumber(grph, numbersBig[hero.getDmgBonus()/10], tW, 5 * tH);
+            drawBigNumber(grph, numbersBig[hero.getDmgBonus()%10], 2 * tW, 5 * tH);
+        } else drawBigNumber(grph, numbersBig[hero.getDmgBonus()], tW, 5 * tH);
         if(hero.getDmgBonus()/10 >= 1) {
-            drawBigNumber(grph, numbersBig[hero.getDmgBonus()/10], tW, tH);
-            drawBigNumber(grph, numbersBig[hero.getDmgBonus()%10], 2 * tW, tH);
-        } else drawBigNumber(grph, numbersBig[hero.getDmgBonus()], tW, tH);
+            drawBigNumber(grph, numbersBig[hero.getDmgBonus()/10], tW, 6 * tH);
+            drawBigNumber(grph, numbersBig[hero.getDmgBonus()%10], 2 * tW, 6 * tH);
+        } else drawBigNumber(grph, numbersBig[hero.getDmgBonus()], tW, 6 * tH);
         if(hero.getDmgBonus()/10 >= 1) {
-            drawBigNumber(grph, numbersBig[hero.getDmgBonus()/10], tW, 2 * tH);
-            drawBigNumber(grph, numbersBig[hero.getDmgBonus()%10], 2 * tW, 2 * tH);
-        } else drawBigNumber(grph, numbersBig[hero.getDmgBonus()], tW, 2 * tH);
+            drawBigNumber(grph, numbersBig[hero.getDmgBonus()/10], tW, 7 * tH);
+            drawBigNumber(grph, numbersBig[hero.getDmgBonus()%10], 2 * tW, 7 * tH);
+        } else drawBigNumber(grph, numbersBig[hero.getDmgBonus()], tW, 7 * tH);
         for(int i=4; i<9; i++) {
             if (units2[i-4] != null) {
-                drawUnit(grph, units2[i-4], i * tW, tH);
+                drawUnit(grph, units2[i-4], i * tW, 6 * tH);
                 if(hero.getArmy()[i-4].getCount()/1000 >= 1) {
-                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()/1000], i * tW, tH + 48);
-                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()%1000/100], i * tW + 16, tH + 48);
-                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()%100/10], i * tW + 32, tH + 48);
-                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()%10], i * tW + 48, tH + 48);
+                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()/1000], i * tW, (6 * tH) + 48);
+                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()%1000/100], i * tW + 16, (6 * tH) + 48);
+                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()%100/10], i * tW + 32, (6 * tH) + 48);
+                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()%10], i * tW + 48, (6 * tH) + 48);
                 } else if(hero.getArmy()[i-4].getCount()/100 >= 1) {
-                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()/100], i * tW + 16, tH + 48);
-                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()%100/10], i * tW + 32, tH + 48);
-                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()%10], i * tW + 48, tH + 48);
+                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()/100], i * tW + 16, (6 * tH) + 48);
+                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()%100/10], i * tW + 32, (6 * tH) + 48);
+                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()%10], i * tW + 48, (6 * tH) + 48);
 
                 } else if(hero.getArmy()[i-4].getCount()/10 >= 1) {
-                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()/10], i * tW + 32, tH + 48);
-                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()%10], i * tW + 48, tH + 48);
+                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()/10], i * tW + 32, (6 * tH) + 48);
+                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()%10], i * tW + 48, (6 * tH) + 48);
 
                 } else {
-                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()], i * tW + 48, tH + 48);
+                    drawNumber(grph, numbers[hero.getArmy()[i-4].getCount()], i * tW + 48, (6 * tH) + 48);
                 }
             }
         }
@@ -282,12 +284,49 @@ public class HeroToTownField extends Component implements Runnable, MouseListene
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        posX = e.getX()/64;
+        posY = e.getY()/64;
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        int nposX = e.getX()/64;
+        int nposY = e.getY()/64;
+        if ((posY == 3) && ((posX == 2) || (posX == 3) || (posX == 4) || (posX == 5) || (posX == 6))) {
+            Unit tmp = town.getArmy()[posX - 2];
+            if ((nposY == 3) && ((nposX == 2) || (nposX == 3) || (nposX == 4) || (nposX == 5) || (nposX == 6))) {
+                town.setArmy(town.getArmy()[nposX - 2], posX - 2);
+                town.setArmy(tmp, nposX - 2);
+            }
+            if ((nposY == 6) && ((nposX == 4) || (nposX == 5) || (nposX == 6) || (nposX == 7) || (nposX == 8))) {
+                town.setArmy(hero.getArmy()[nposX - 4], posX - 2);
+                hero.setArmy(tmp, nposX - 4);
+            }
+        }
+        if ((posY == 6) && ((posX == 4) || (posX == 5) || (posX == 6) || (posX == 7) || (posX == 8))) {
+            Unit tmp = hero.getArmy()[posX - 4];
+            if ((nposY == 3) && ((nposX == 2) || (nposX == 3) || (nposX == 4) || (nposX == 5) || (nposX == 6))) {
+                hero.setArmy(town.getArmy()[nposX - 2], posX - 4);
+                town.setArmy(tmp, nposX - 2);
+            }
+            if ((nposY == 6) && ((nposX == 4) || (nposX == 5) || (nposX == 6) || (nposX == 7) || (nposX == 8))) {
+                hero.setArmy(hero.getArmy()[nposX - 4], posX - 4);
+                hero.setArmy(tmp, nposX - 4);
+            }
+        }
+        if((posY == 1) && (posX < 6)) {
+            BuildingMenu bm = new BuildingMenu();
+            bm.setHtw(this);
+            bm.setResizable(false);
+            bm.showButton(posX);
+        }
+        else if (((posY == 0) || (posY == 1)) && ((posX > 5) && (posX < 9))) {
+            BuildingMenu bm = new BuildingMenu();
+            bm.setHtw(this);
+            bm.setResizable(false);
+            bm.showButton(6);
+        }
+        repaint();
     }
 
     @Override
@@ -298,5 +337,9 @@ public class HeroToTownField extends Component implements Runnable, MouseListene
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    public Town getTown() {
+        return town;
     }
 }
