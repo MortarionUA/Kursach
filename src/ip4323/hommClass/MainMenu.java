@@ -61,7 +61,7 @@ public class MainMenu extends JFrame {
         buttonTown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new TownFieldWindow("Town");
+                //new TownFieldWindow("Town");
                 mainFrame.dispose();
             }
         });

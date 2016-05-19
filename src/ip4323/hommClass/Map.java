@@ -42,6 +42,8 @@ public class Map implements Serializable {
     public void addTown(int posX, int posY) {
         if ((findTown(posX, posY) == Integer.MAX_VALUE) && ((findTown(posX, posY+1) == Integer.MAX_VALUE)) && ((findTown(posX, posY-1) == Integer.MAX_VALUE))) {
             mapTown.add(new Town(posX, posY, 0));
+        } else {
+            TownFieldWindow tf = new TownFieldWindow("Town", mapTown.get(findTown(posX, posY)));
         }
     }
 

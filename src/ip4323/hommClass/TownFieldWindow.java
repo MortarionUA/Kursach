@@ -7,7 +7,10 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class TownFieldWindow extends Frame {
-    public TownFieldWindow(String s) {
+
+    private Town town;
+
+    public TownFieldWindow(String s, Town town) {
 
         super(s);
 
@@ -17,18 +20,20 @@ public class TownFieldWindow extends Frame {
         setResizable(false);
 
         add(pane, BorderLayout.CENTER);
+//
+//        Town town = new Town(0, 0, 0);
+//
+//        Unit newUnit = new Unit(1, 333);
+//
+//        Unit army[] = new Unit[]{null, newUnit, null, null, null};
+//
+//        town.setAllArmy(army);
+//
+//        int[] buildings = new int[]{0, 0, 0, 0, 0, 0, 0};
+//
+//        town.setBuildings(buildings);
 
-        Town town = new Town(0, 0, 0);
-
-        Unit newUnit = new Unit(1, 333);
-
-        Unit army[] = new Unit[]{null, newUnit, null, null, null};
-
-        town.setAllArmy(army);
-
-        int[] buildings = new int[]{0, 0, 0, 0, 0, 0, 0};
-
-        town.setBuildings(buildings);
+        this.town = town;
 
         TownField tf = new TownField(this, 576, 256, town);
 

@@ -1,9 +1,11 @@
 package ip4323.hommClass;
 
+import java.io.Serializable;
+
 /**
  * Created by dima_ on 08.04.2016.
  */
-public class Town {
+public class Town implements Serializable{
     private int faction;
     private boolean buyFlag[] = new boolean[] {false, false, false, false, false};
     private boolean buildFlag = true;
