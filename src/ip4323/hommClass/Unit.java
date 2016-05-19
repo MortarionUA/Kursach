@@ -1,9 +1,11 @@
 package ip4323.hommClass;
 
+import java.io.Serializable;
+
 /**
  * Created by dima_ on 05.04.2016.
  */
-public class Unit {
+public class Unit implements Serializable {
     private int type;
     private int ovhp;
     private int hp;
