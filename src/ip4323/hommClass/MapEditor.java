@@ -161,9 +161,15 @@ public class MapEditor extends Component implements Runnable, ActionListener, Mo
         int tempX = e.getX()/64;
         int tempY = e.getY()/64;
         if (flag == 10) {
-            workingMap.addTown(tempX, tempY);
+            if(e.getModifiers()==InputEvent.BUTTON3_MASK) {
+                workingMap.delTown(tempX, tempY);
+            } else {
+                workingMap.addTown(tempX, tempY);
+            }
         }
-        workingMap.setMapTerr(tempX, tempY, flag);
+        else {
+            workingMap.setMapTerr(tempX, tempY, flag);
+        }
     }
 
     @Override

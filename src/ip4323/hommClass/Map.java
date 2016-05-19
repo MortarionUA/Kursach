@@ -49,10 +49,8 @@ public class Map implements Serializable {
 
     public void delTown(int posX, int posY) {
         if (findTown(posX, posY) == Integer.MAX_VALUE) {
-
         }
         else mapTown.remove(findTown(posX, posY));
-
     }
 
     public int findTown(int posX, int posY) {
