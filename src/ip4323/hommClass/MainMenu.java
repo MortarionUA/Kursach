@@ -28,7 +28,7 @@ public class MainMenu extends JFrame {
             }
         });
         controlPanel = new JPanel();
-        controlPanel.setLayout(new GridLayout(7, 1));
+        controlPanel.setLayout(new GridLayout(8, 1));
 
         mainFrame.add(controlPanel);
         mainFrame.setVisible(true);
@@ -42,6 +42,7 @@ public class MainMenu extends JFrame {
         JButton buttonHero = new JButton("Hero");
         JButton buttonHeroToHero = new JButton("HeroToHero");
         JButton buttonHeroToTown = new JButton("HeroToTown");
+        JButton buttonUnit = new JButton("Unit");
 
         buttonExit.addActionListener(new ActionListener() {
             @Override
@@ -98,12 +99,22 @@ public class MainMenu extends JFrame {
             }
         });
 
+        buttonUnit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Unit newUnit = new Unit(1, 333);
+                new UnitInfo(newUnit);
+                mainFrame.dispose();
+            }
+        });
+
         controlPanel.add(buttonBattle);
         controlPanel.add(buttonMapEditor);
         controlPanel.add(buttonTown);
         controlPanel.add(buttonHero);
         controlPanel.add(buttonHeroToHero);
         controlPanel.add(buttonHeroToTown);
+        controlPanel.add(buttonUnit);
         controlPanel.add(buttonExit);
 
         mainFrame.setVisible(true);

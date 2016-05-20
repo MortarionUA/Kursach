@@ -46,6 +46,8 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
     private Graphics grph;
     private BufferedImage grphImage;
 
+    private UnitInfo ui = null;
+
     private int lastX = 0;
     private int lastY = 0;
 

@@ -1,6 +1,7 @@
 package ip4323.hommClass;
 
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -20,6 +21,8 @@ public class HeroToTownField extends Component implements Runnable, MouseListene
     private Image bignumberset;
 
     private int posX, posY;
+
+    private UnitInfo ui = null;
 
     private Thread t;
     private Graphics grph;
@@ -286,10 +289,19 @@ public class HeroToTownField extends Component implements Runnable, MouseListene
     public void mousePressed(MouseEvent e) {
         posX = e.getX()/64;
         posY = e.getY()/64;
+        if ((e.getModifiers()== InputEvent.BUTTON3_MASK) && (((posY == 3) && ((posX == 2) || (posX == 3) || (posX == 4) || (posX == 5) || (posX == 6))))){
+            ui = new UnitInfo(town.getArmy()[posX-2]);
+        }
+        if ((e.getModifiers()== InputEvent.BUTTON3_MASK) && (((posY == 6) && ((posX == 4) || (posX == 5) || (posX == 6) || (posX == 7) || (posX == 8))))){
+            ui = new UnitInfo(hero.getArmy()[posX-4]);
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (ui != null) {
+            ui.disappear();
+        }
         int nposX = e.getX()/64;
         int nposY = e.getY()/64;
         if ((posY == 3) && ((posX == 2) || (posX == 3) || (posX == 4) || (posX == 5) || (posX == 6))) {

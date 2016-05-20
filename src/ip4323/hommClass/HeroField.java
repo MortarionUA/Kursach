@@ -1,6 +1,7 @@
 package ip4323.hommClass;
 
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -19,6 +20,8 @@ public class HeroField extends Component implements Runnable, MouseListener {
     private Image bignumberset;
 
     private int posX, posY;
+
+    private UnitInfo ui = null;
 
     private Thread t;
     private Graphics grph;
@@ -179,10 +182,16 @@ public class HeroField extends Component implements Runnable, MouseListener {
     public void mousePressed(MouseEvent e) {
         posX = e.getX()/64;
         posY = e.getY()/64;
+        if ((e.getModifiers()== InputEvent.BUTTON3_MASK) && (((posY == 1) && ((posX == 4) || (posX == 5) || (posX == 6) || (posX == 7) || (posX == 8))))){
+            ui = new UnitInfo(hero.getArmy()[posX-4]);
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (ui != null) {
+            ui.disappear();
+        }
         if ((posY == 1) && ((posX == 4) || (posX == 5) || (posX == 6) || (posX == 7) || (posX == 8))) {
             Unit tmp = hero.getArmy()[posX - 4];
             int nposX = e.getX()/64;

@@ -1,6 +1,7 @@
 package ip4323.hommClass;
 
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -23,6 +24,8 @@ public class HeroToHeroField extends Component implements Runnable, MouseListene
     private Thread t;
     private Graphics grph;
     private BufferedImage grphImage;
+
+    private UnitInfo ui = null;
 
     private Hero hero1;
     private Hero hero2;
@@ -235,10 +238,19 @@ public class HeroToHeroField extends Component implements Runnable, MouseListene
     public void mousePressed(MouseEvent e) {
         posX = e.getX()/64;
         posY = e.getY()/64;
+        if ((e.getModifiers()== InputEvent.BUTTON3_MASK) && (((posY == 1) && ((posX == 4) || (posX == 5) || (posX == 6) || (posX == 7) || (posX == 8))))){
+            ui = new UnitInfo(hero1.getArmy()[posX-4]);
+        }
+        if ((e.getModifiers()== InputEvent.BUTTON3_MASK) && (((posY == 6) && ((posX == 4) || (posX == 5) || (posX == 6) || (posX == 7) || (posX == 8))))){
+            ui = new UnitInfo(hero2.getArmy()[posX-4]);
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (ui != null) {
+            ui.disappear();
+        }
         int nposX = e.getX()/64;
         int nposY = e.getY()/64;
         if ((posY == 1) && ((posX == 4) || (posX == 5) || (posX == 6) || (posX == 7) || (posX == 8))) {

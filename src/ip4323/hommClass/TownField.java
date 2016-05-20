@@ -1,6 +1,7 @@
 package ip4323.hommClass;
 
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -23,6 +24,8 @@ public class TownField extends Component implements Runnable, MouseListener {
     private BufferedImage grphImage;
 
     private int posX, posY;
+
+    private UnitInfo ui = null;
 
     private Town town;
 
@@ -207,10 +210,16 @@ public class TownField extends Component implements Runnable, MouseListener {
     public void mousePressed(MouseEvent e) {
         posX = e.getX()/64;
         posY = e.getY()/64;
+        if ((e.getModifiers()== InputEvent.BUTTON3_MASK) && (((posY == 3) && ((posX == 2) || (posX == 3) || (posX == 4) || (posX == 5) || (posX == 6))))){
+            ui = new UnitInfo(town.getArmy()[posX-2]);
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (ui != null) {
+            ui.disappear();
+        }
         if ((posY == 3) && ((posX == 2) || (posX == 3) || (posX == 4) || (posX == 5) || (posX == 6))) {
             Unit tmp = town.getArmy()[posX - 2];
             int nposX = e.getX()/64;
