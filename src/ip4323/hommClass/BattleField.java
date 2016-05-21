@@ -22,29 +22,24 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
     private static final int tW = 64;
     private static final int tH = 64;
 
-    private static final UnitImg map[][] =
-            {
-                    {
-                            UnitImg.NT_SOLD1, UnitImg.NT_ARCH1, UnitImg.NT_ELEM1
-                    },
-                    {
-                            UnitImg.NT_SOLD2, UnitImg.NT_ARCH2, UnitImg.NT_ELEM2
-                    },
-                    {
-                            UnitImg.BL_SOLD1, UnitImg.BL_ARCH1, UnitImg.BL_ELEM1
-                    }
-            };
-
     private int[][] convMap2;
     private Tile map2[][] = new Tile[20][10];
+    private boolean[][] highMap = new boolean[20][10];
 
     private Image unitset;
     private Image tileset;
-    private Image factionset;
+    private Image highlightset;
+    private Image numberset;
 
     private Thread t;
     private Graphics grph;
     private BufferedImage grphImage;
+
+    private int posX;
+    private int posY;
+
+    private Hero hero1;
+    private Hero hero2;
 
     private UnitInfo ui = null;
 
@@ -54,13 +49,16 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
     protected int w, h;
 
     private ArrayList<Unit> units = new ArrayList<>();
+    private Numbers numbers[] = new Numbers[]{Numbers.zero, Numbers.one, Numbers.two, Numbers.three, Numbers.four, Numbers.five, Numbers.six, Numbers.seven, Numbers.eight, Numbers.nine};
 
     protected Frame f;
 
-    public BattleField(Frame frame, int width, int height) {
+    public BattleField(Frame frame, int width, int height, Hero newHero1, Hero newHero2) {
         w = width;
         h = height;
         f = frame;
+        hero1 = newHero1;
+        hero2 = newHero2;
 
         enableEvents(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
         addMouseListener(this);
@@ -68,11 +66,14 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
 
         unitset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/human units.png"));
         tileset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/tileset.png"));
-        factionset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/fractions.png"));
+        numberset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/numbers.png"));
+        highlightset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/highlight.png"));
 
         BattleMap bMap = new BattleMap();
         bMap.generateField();
         convMap2 = bMap.getFieldType();
+
+        combatPrepare(hero1, hero2);
 
         bmInit();
     }
@@ -138,12 +139,76 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
                 drawTile(grph, map2[i][j], i * tW, j * tH);
             }
         }
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                drawUnit(grph, map[j][i], i * tW, j * tH);
+        UnitImg unitImg[] = new UnitImg[units.size()];
+        for(int i=0; i<units.size(); i++) {
+            switch(units.get(i).getType()) {
+                case 1: unitImg[i] = UnitImg.BL_SOLD1;
+                    break;
+                case 2: unitImg[i] = UnitImg.BL_ARCH1;
+                    break;
+                case 3: unitImg[i] = UnitImg.BL_COLO1;
+                    break;
+                case 4: unitImg[i] = UnitImg.BL_CATA1;
+                    break;
+                case 5: unitImg[i] = UnitImg.BL_DRAG1;
+                    break;
             }
+            int tempX = units.get(i).getPosx() * tW;
+            int tempY = units.get(i).getPosy() * tH;
+            drawUnit(grph, unitImg[i], tempX, tempY);
+            if(units.get(i).getCount()/1000 >= 1) {
+                drawNumber(grph, numbers[units.get(i).getCount()/1000], tempX, tempY + 48);
+                drawNumber(grph, numbers[units.get(i).getCount()%1000/100], tempX + 16, tempY + 48);
+                drawNumber(grph, numbers[units.get(i).getCount()%100/10], tempX + 32, tempY + 48);
+                drawNumber(grph, numbers[units.get(i).getCount()%10], tempX + 48, tempY + 48);
+            } else if(units.get(i).getCount()/100 >= 1) {
+                drawNumber(grph, numbers[units.get(i).getCount()/100], tempX + 16, tempY + 48);
+                drawNumber(grph, numbers[units.get(i).getCount()%100/10], tempX + 32, tempY + 48);
+                drawNumber(grph, numbers[units.get(i).getCount()%10], tempX + 48, tempY + 48);
+
+            } else if(units.get(i).getCount()/10 >= 1) {
+                drawNumber(grph, numbers[units.get(i).getCount()/10], tempX + 32, tempY + 48);
+                drawNumber(grph, numbers[units.get(i).getCount()%10], tempX + 48, tempY + 48);
+
+            } else {
+                drawNumber(grph, numbers[units.get(i).getCount()], tempX + 48, tempY + 48);
+            }
+            cleanhigh();
+            drawhigh(tempX, tempY, units.get(i).getSpeed());
+            drawPath(grph);
         }
         g.drawImage(grphImage, 0, 0, this);
+    }
+
+    public void cleanhigh() {
+        for(int i=0; i<20; i++) {
+            for(int j=0; j<10; j++) {
+                highMap[i][j] = false;
+            }
+        }
+    }
+
+    protected void drawhigh(int x, int y, int moves) {
+        int tempX = x/64;
+        int tempY = y/64;
+        if ((x >= 1280) || (y >= 640) || (x < 0) || (y < 0)) {return;}
+        if ((map2[tempX][tempY] == Tile.MOUNT) || (moves < 1)) {return;}
+        moves--;
+        highMap[tempX][tempY] = true;
+        drawhigh(x-64, y, moves);
+        drawhigh(x+64, y, moves);
+        drawhigh(x, y-64, moves);
+        drawhigh(x, y+64, moves);
+    }
+
+    protected void drawPath(Graphics g) {
+        for(int i=0; i<20; i++) {
+            for(int j=0; j<10; j++) {
+                int x = i * tW;
+                int y = j * tH;
+                if (highMap[i][j] == true) g.drawImage(highlightset, x, y, x + tW, y + tH, 0, 0, tW, tH, this);
+            }
+        }
     }
 
     protected void drawTile(Graphics g, Tile t, int x, int y) {
@@ -158,10 +223,12 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
         g.drawImage(unitset, x, y, x + tW, y + tH, mx * tW, my * tH, mx * tW + tW, my * tH + tH, this);
     }
 
-    protected void drawCircle(Graphics g, Factions f, int x, int y) {
-        int mx = f.ordinal() % 4;
-        int my = f.ordinal() / 4;
-        g.drawImage(factionset, x, y, x + tW, y + tH, mx * tW, my * tH, mx * tW + tW, my * tH + tH, this);
+    protected void drawNumber(Graphics g, Numbers n, int x, int y) {
+        int numX = 16;
+        int numY = 16;
+        int mx = n.ordinal() % 10;
+        int my = n.ordinal() / 10;
+        g.drawImage(numberset, x, y, x + numX, y + numY, mx * numX, my * numY, mx * numX + numX, my * numY + numY, this);
     }
 
     public Dimension getPreferredSize() {
@@ -178,19 +245,30 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
 
     }
 
+    public Unit findUnit(int x, int y) {
+        for (int i=0; i<units.size(); i++) {
+            if ((units.get(i).getPosx() == x) && (units.get(i).getPosy() == y)) {
+                return units.get(i);
+            }
+        }
+        return null;
+    }
+
     @Override
     public void mousePressed(MouseEvent e) {
-        repaint();
+        posX = e.getX()/64;
+        posY = e.getY()/64;
+        if ((e.getModifiers()== InputEvent.BUTTON3_MASK) && (findUnit(posX, posY) != null)){
+            ui = new UnitInfo(findUnit(posX, posY));
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Graphics g = getGraphics();
-        int inX, inY;
-        inX = ((e.getX() / 64) * 64);
-        inY = ((e.getY() / 64) * 64);
-        drawCircle(g, Factions.BL_CIRCL, inX, inY);
-
+        if (ui != null) {
+            ui.disappear();
+        }
+        repaint();
     }
 
     @Override
@@ -210,63 +288,42 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        Graphics g = getGraphics();
-        int inX, inY;
-        inX = ((e.getX() / 64) * 64);
-        inY = ((e.getY() / 64) * 64);
-        if ((lastX == inX / 64) && (lastY == inY / 64)) {
-            drawCircle(g, Factions.RD_CIRCL, inX, inY);
-        } else {
-            lastX = inX / 64;
-            lastY = inY / 64;
-            repaint();
-            drawCircle(g, Factions.RD_CIRCL, inX, inY);
-        }
     }
 
     public void combatPrepare(Hero player1, Hero player2) {
         BattleMap bmap = new BattleMap();
         bmap.generateField();
         for (int i = 0; i < player1.getArmy().length; i++) {
-            bmap.getFieldUnit()[1][i * 2] = player1.getArmy()[i];
-            player1.getArmy()[i].setPosx(1);
-            player1.getArmy()[i].setPosx(i * 2);
+            if (player1.getArmy()[i] != null) {
+                int tmpdmg = player1.getArmy()[i].getDmg() + player1.getDmgBonus();
+                int tmpdef = player1.getArmy()[i].getDef() + player1.getDefBonus();
+                int tmphp = player1.getArmy()[i].getHp() + player1.getHpBonus();
+                int tmpovhp = player1.getArmy()[i].getOvhp() + player1.getHpBonus();
+                player1.getArmy()[i].setDmg(tmpdmg);
+                player1.getArmy()[i].setDef(tmpdef);
+                player1.getArmy()[i].setHp(tmphp);
+                player1.getArmy()[i].setOvhp(tmpovhp);
+                player1.getArmy()[i].setPlayerHave(0);
+                player1.getArmy()[i].setPosx(0);
+                player1.getArmy()[i].setPosy(i * 2);
+                units.add(player1.getArmy()[i]);
+            }
         }
         for (int i = 0; i < player2.getArmy().length; i++) {
-            bmap.getFieldUnit()[18][i * 2] = player2.getArmy()[i];
-            player2.getArmy()[i].setPosx(18);
-            player2.getArmy()[i].setPosx(i * 2);
-        }
-        for (int i = 0; i < player1.getArmy().length; i++) {
-            int tmpdmg = player1.getArmy()[i].getDmg() + player1.getDmgBonus();
-            int tmpdef = player1.getArmy()[i].getDef() + player1.getDefBonus();
-            int tmphp = player1.getArmy()[i].getHp() + player1.getHpBonus();
-            int tmpovhp = player1.getArmy()[i].getOvhp() + player1.getHpBonus();
-            player1.getArmy()[i].setDmg(tmpdmg);
-            player1.getArmy()[i].setDef(tmpdef);
-            player1.getArmy()[i].setHp(tmphp);
-            player1.getArmy()[i].setOvhp(tmpovhp);
-            player1.getArmy()[i].setPlayerHave(0);
-        }
-        for (int i = 0; i < player2.getArmy().length; i++) {
-            int tmpdmg = player2.getArmy()[i].getDmg() + player2.getDmgBonus();
-            int tmpdef = player2.getArmy()[i].getDef() + player2.getDefBonus();
-            int tmphp = player2.getArmy()[i].getHp() + player2.getHpBonus();
-            int tmpovhp = player2.getArmy()[i].getOvhp() + player2.getHpBonus();
-            player2.getArmy()[i].setDmg(tmpdmg);
-            player2.getArmy()[i].setDef(tmpdef);
-            player2.getArmy()[i].setHp(tmphp);
-            player2.getArmy()[i].setOvhp(tmpovhp);
-            player2.getArmy()[i].setPlayerHave(1);
-        }
-        int tmplen = 0;
-        for (int i = 0; i < player1.getArmy().length; i++) {
-            units.add(player1.getArmy()[i]);
-            tmplen++;
-        }
-        for (int i = 0; i < player2.getArmy().length; i++) {
-            units.add(player2.getArmy()[i]);
-            tmplen++;
+            if (player2.getArmy()[i] != null) {
+                int tmpdmg = player2.getArmy()[i].getDmg() + player2.getDmgBonus();
+                int tmpdef = player2.getArmy()[i].getDef() + player2.getDefBonus();
+                int tmphp = player2.getArmy()[i].getHp() + player2.getHpBonus();
+                int tmpovhp = player2.getArmy()[i].getOvhp() + player2.getHpBonus();
+                player2.getArmy()[i].setDmg(tmpdmg);
+                player2.getArmy()[i].setDef(tmpdef);
+                player2.getArmy()[i].setHp(tmphp);
+                player2.getArmy()[i].setOvhp(tmpovhp);
+                player2.getArmy()[i].setPlayerHave(1);
+                player2.getArmy()[i].setPosx(19);
+                player2.getArmy()[i].setPosy(i * 2);
+                units.add(player2.getArmy()[i]);
+            }
         }
         Collections.sort(units, new CompareUnits());
     }
