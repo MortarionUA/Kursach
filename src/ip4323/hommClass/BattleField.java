@@ -142,15 +142,20 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
         UnitImg unitImg[] = new UnitImg[units.size()];
         for(int i=0; i<units.size(); i++) {
             switch(units.get(i).getType()) {
-                case 1: unitImg[i] = UnitImg.BL_SOLD1;
+                case 1: if (units.get(i).getPlayerHave() == 0) unitImg[i] = UnitImg.BL_SOLD1;
+                    else unitImg[i] = UnitImg.RD_SOLD1;
                     break;
-                case 2: unitImg[i] = UnitImg.BL_ARCH1;
+                case 2: if (units.get(i).getPlayerHave() == 0) unitImg[i] = UnitImg.BL_ARCH1;
+                else unitImg[i] = UnitImg.RD_ARCH1;
                     break;
-                case 3: unitImg[i] = UnitImg.BL_COLO1;
+                case 3: if (units.get(i).getPlayerHave() == 0) unitImg[i] = UnitImg.BL_COLO1;
+                else unitImg[i] = UnitImg.RD_COLO1;
                     break;
-                case 4: unitImg[i] = UnitImg.BL_CATA1;
+                case 4: if (units.get(i).getPlayerHave() == 0) unitImg[i] = UnitImg.BL_CATA1;
+                else unitImg[i] = UnitImg.RD_CATA1;
                     break;
-                case 5: unitImg[i] = UnitImg.BL_DRAG1;
+                case 5: if (units.get(i).getPlayerHave() == 0) unitImg[i] = UnitImg.BL_DRAG1;
+                else unitImg[i] = UnitImg.RD_DRAG1;
                     break;
             }
             int tempX = units.get(i).getPosx() * tW;
@@ -173,10 +178,10 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
             } else {
                 drawNumber(grph, numbers[units.get(i).getCount()], tempX + 48, tempY + 48);
             }
-            cleanhigh();
-            drawhigh(tempX, tempY, units.get(i).getSpeed());
-            drawPath(grph);
         }
+        cleanhigh();
+        drawhigh(units.get(flag).getPosx() * tW, units.get(flag).getPosy() * tH, units.get(flag).getSpeed());
+        drawPath(grph);
         g.drawImage(grphImage, 0, 0, this);
     }
 
@@ -193,7 +198,12 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
         int tempY = y/64;
         if ((x >= 1280) || (y >= 640) || (x < 0) || (y < 0)) {return;}
         if ((map2[tempX][tempY] == Tile.MOUNT) || (moves < 1)) {return;}
-        moves--;
+        if ((map2[tempX][tempY] == Tile.HILL1) || (map2[tempX][tempY] == Tile.HILL2)) {
+            moves--;
+            moves--;
+        } else {
+            moves--;
+        }
         highMap[tempX][tempY] = true;
         drawhigh(x-64, y, moves);
         drawhigh(x+64, y, moves);
@@ -254,6 +264,17 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
         return null;
     }
 
+    public void setUnit(int x, int y, Unit newUnit) {
+        for (int i=0; i<units.size(); i++) {
+            if ((units.get(i).getPosx() == x) && (units.get(i).getPosy() == y)) {
+                units.set(i, newUnit);
+                if(units.get(i) == null) {
+                    units.remove(i);
+                }
+            }
+        }
+    }
+
     @Override
     public void mousePressed(MouseEvent e) {
         posX = e.getX()/64;
@@ -267,6 +288,22 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
     public void mouseReleased(MouseEvent e) {
         if (ui != null) {
             ui.disappear();
+        }
+        if ((e.getModifiers() == InputEvent.BUTTON1_MASK) && (highMap[posX][posY] == true) && (findUnit(posX, posY) == null)) {
+            units.get(flag).setPosx(posX);
+            units.get(flag).setPosy(posY);
+            if (findUnit(posX-1, posY) != null) {
+                setUnit(posX-1, posY, units.get(flag).attack(findUnit(posX-1, posY)));
+            } else if (findUnit(posX+1, posY) != null) {
+                setUnit(posX+1, posY, units.get(flag).attack(findUnit(posX+1, posY)));
+            } else if (findUnit(posX, posY+1) != null) {
+                setUnit(posX, posY+1, units.get(flag).attack(findUnit(posX, posY+1)));
+            } else if (findUnit(posX, posY-1) != null) {
+                setUnit(posX, posY-1, units.get(flag).attack(findUnit(posX, posY-1)));
+            } else {
+
+            }
+            turn();
         }
         repaint();
     }
@@ -329,15 +366,14 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
     }
 
     public void turn() {
-        for (int i=0; i < units.size(); i++) {
-
-        }
+        flag++;
+        if (flag >= units.size()) flag = 0;
     }
 
     class CompareUnits implements Comparator<Unit> {
 
         public int compare(Unit o1, Unit o2) {
-            if (o1.getSpeed() > o2.getSpeed()) return 1;
+            if (o1.getSpeed() < o2.getSpeed()) return 1;
             else if (o1.getSpeed() == o2.getSpeed()) return 0;
             else return -1;
         }
