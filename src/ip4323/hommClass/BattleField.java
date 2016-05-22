@@ -216,7 +216,9 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
             for(int j=0; j<10; j++) {
                 int x = i * tW;
                 int y = j * tH;
-                if (highMap[i][j] == true) g.drawImage(highlightset, x, y, x + tW, y + tH, 0, 0, tW, tH, this);
+                if (highMap[i][j] == true) {
+                    g.drawImage(highlightset, x, y, x + tW, y + tH, 0, 0, tW, tH, this);
+                }
             }
         }
     }
