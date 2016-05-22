@@ -289,16 +289,16 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
         if (ui != null) {
             ui.disappear();
         }
-        if ((e.getModifiers() == InputEvent.BUTTON1_MASK) && (highMap[posX][posY] == true) && (findUnit(posX, posY) == null)) {
+        if ((e.getModifiers() == InputEvent.BUTTON1_MASK) && (highMap[posX][posY] == true) && ((findUnit(posX, posY) == null) || (findUnit(posX, posY) == units.get(flag)))) {
             units.get(flag).setPosx(posX);
             units.get(flag).setPosy(posY);
-            if (findUnit(posX-1, posY) != null) {
+            if ((findUnit(posX-1, posY) != null) && (findUnit(posX-1, posY).getPlayerHave() != units.get(flag).getPlayerHave())) {
                 setUnit(posX-1, posY, units.get(flag).attack(findUnit(posX-1, posY)));
-            } else if (findUnit(posX+1, posY) != null) {
+            } else if ((findUnit(posX+1, posY) != null) && (findUnit(posX+1, posY).getPlayerHave() != units.get(flag).getPlayerHave())) {
                 setUnit(posX+1, posY, units.get(flag).attack(findUnit(posX+1, posY)));
-            } else if (findUnit(posX, posY+1) != null) {
+            } else if ((findUnit(posX, posY+1) != null) && (findUnit(posX, posY+1).getPlayerHave() != units.get(flag).getPlayerHave())) {
                 setUnit(posX, posY+1, units.get(flag).attack(findUnit(posX, posY+1)));
-            } else if (findUnit(posX, posY-1) != null) {
+            } else if ((findUnit(posX, posY-1) != null) && (findUnit(posX, posY-1).getPlayerHave() != units.get(flag).getPlayerHave())) {
                 setUnit(posX, posY-1, units.get(flag).attack(findUnit(posX, posY-1)));
             } else {
 
@@ -334,12 +334,11 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
             if (player1.getArmy()[i] != null) {
                 int tmpdmg = player1.getArmy()[i].getDmg() + player1.getDmgBonus();
                 int tmpdef = player1.getArmy()[i].getDef() + player1.getDefBonus();
-                int tmphp = player1.getArmy()[i].getHp() + player1.getHpBonus();
                 int tmpovhp = player1.getArmy()[i].getOvhp() + player1.getHpBonus();
                 player1.getArmy()[i].setDmg(tmpdmg);
                 player1.getArmy()[i].setDef(tmpdef);
-                player1.getArmy()[i].setHp(tmphp);
                 player1.getArmy()[i].setOvhp(tmpovhp);
+                player1.getArmy()[i].setHp(player1.getArmy()[i].getOvhp());
                 player1.getArmy()[i].setPlayerHave(0);
                 player1.getArmy()[i].setPosx(0);
                 player1.getArmy()[i].setPosy(i * 2);
@@ -350,12 +349,11 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
             if (player2.getArmy()[i] != null) {
                 int tmpdmg = player2.getArmy()[i].getDmg() + player2.getDmgBonus();
                 int tmpdef = player2.getArmy()[i].getDef() + player2.getDefBonus();
-                int tmphp = player2.getArmy()[i].getHp() + player2.getHpBonus();
                 int tmpovhp = player2.getArmy()[i].getOvhp() + player2.getHpBonus();
                 player2.getArmy()[i].setDmg(tmpdmg);
                 player2.getArmy()[i].setDef(tmpdef);
-                player2.getArmy()[i].setHp(tmphp);
                 player2.getArmy()[i].setOvhp(tmpovhp);
+                player2.getArmy()[i].setHp(player2.getArmy()[i].getOvhp());
                 player2.getArmy()[i].setPlayerHave(1);
                 player2.getArmy()[i].setPosx(19);
                 player2.getArmy()[i].setPosy(i * 2);

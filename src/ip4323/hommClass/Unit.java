@@ -89,6 +89,15 @@ public class Unit implements Serializable {
     public Unit attack(Unit attacked) {
         int tmpdmg;
         tmpdmg = (dmg - attacked.def)*count;
+        if (tmpdmg < 1) {
+            tmpdmg = (attacked.dmg - def)*attacked.count;
+            do {
+                count--;
+                tmpdmg -= hp;
+            }
+            while (tmpdmg > hp);
+            return attacked;
+        }
         if (tmpdmg > attacked.hp*attacked.count) {
             return null;
         }
