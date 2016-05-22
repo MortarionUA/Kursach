@@ -1,20 +1,24 @@
 package ip4323.hommClass;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.*;
 
 /**
- * Created by dima_ on 10.05.2016.
+ * Created by dima_ on 22.05.2016.
  */
-public class MapEditor extends Component implements Runnable, ActionListener, MouseListener, MouseMotionListener, KeyListener {
+public class GlobalMap extends Component implements Runnable, KeyListener, MouseListener {
 
     private static final int tW = 64;
     private static final int tH = 64;
 
+    private Image unitset;
     private Image tileset;
+    private Image highlightset;
     private Image factionset;
 
     private Thread t;
@@ -22,37 +26,44 @@ public class MapEditor extends Component implements Runnable, ActionListener, Mo
     private BufferedImage grphImage;
 
     private Map workingMap;
-
-    private int flag = 0;
-    private int factionFlag = 0;
-
     private Tile map2[][] = new Tile[20][20];
     private Factions map3[][] = new Factions[20][20];
+
+    int posX, posY;
+
+    private int playerFlag;
+    private int dayFlag;
+
+    private Player player1;
+    private Player player2;
+    private Player player0;
 
     protected int w, h;
 
     protected Frame f;
 
-    public MapEditor(Frame frame, int width, int height) {
+    public GlobalMap(Frame frame, int width, int height) throws IOException, ClassNotFoundException {
         w = width;
         h = height;
         f = frame;
 
-        enableEvents(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.KEY_EVENT_MASK);
+        enableEvents(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.KEY_EVENT_MASK);
         addMouseListener(this);
-        addMouseMotionListener(this);
         addKeyListener(this);
         setFocusable(true);
 
         tileset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/tileset.png"));
         factionset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/fractions.png"));
-
-        newMap();
+        highlightset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/highlight.png"));
+        unitset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/human units.png"));
 
         mInit();
     }
 
-    public void mInit() {
+    public void mInit() throws IOException, ClassNotFoundException {
+        load();
+        playerFlag = 1;
+        dayFlag = 0;
         t = new Thread(this);
         t.start();
     }
@@ -152,6 +163,12 @@ public class MapEditor extends Component implements Runnable, ActionListener, Mo
         g.drawImage(tileset, x, y, x + tW, y + tH, mx * tW, my * tH, mx * tW + tW, my * tH + tH, this);
     }
 
+    protected void drawUnit(Graphics g, UnitImg t, int x, int y) {
+        int mx = t.ordinal() % 16;
+        int my = t.ordinal() / 16;
+        g.drawImage(unitset, x, y, x + tW, y + tH, mx * tW, my * tH, mx * tW + tW, my * tH + tH, this);
+    }
+
     public void save() throws IOException {
         FileOutputStream fos = new FileOutputStream("temp1.out");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -167,63 +184,23 @@ public class MapEditor extends Component implements Runnable, ActionListener, Mo
         repaint();
     }
 
-    public void newMap() {
-        workingMap = new Map();
-        workingMap.newMap();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        int tempX = e.getX()/64;
-        int tempY = e.getY()/64;
-        if (flag == 10) {
-            if(e.getModifiers()==InputEvent.BUTTON3_MASK) {
-                workingMap.delTown(tempX, tempY);
-            } else {
-                workingMap.addTown(tempX, tempY, factionFlag);
+    public void turn() {
+        playerFlag++;
+        dayFlag++;
+        if (playerFlag > 2) {
+            playerFlag = 1;
+            for(int i=0; i<workingMap.getMapTown().size(); i++) {
+                workingMap.getMapTown().get(i).setBuildFlag(true);
             }
         }
-        else {
-            workingMap.setMapTerr(tempX, tempY, flag);
+        if (dayFlag >= 14) {
+            dayFlag = 0;
+            for(int i=0; i<workingMap.getMapTown().size(); i++) {
+                for(int j=0; j<5; j++) {
+                    workingMap.getMapTown().get(i).setBuyFlag(true, j);
+                }
+            }
         }
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        repaint();
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        int tempX = e.getX()/64;
-        int tempY = e.getY()/64;
-        workingMap.setMapTerr(tempX, tempY, flag);
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-
     }
 
     @Override
@@ -234,27 +211,7 @@ public class MapEditor extends Component implements Runnable, ActionListener, Mo
     @Override
     public void keyPressed(KeyEvent e) {
         int i = e.getKeyCode();
-        if (i == KeyEvent.VK_0) {
-            flag = 0;
-        } else if (i == KeyEvent.VK_1) {
-            flag = 1;
-        } else if (i == KeyEvent.VK_2) {
-            flag = 2;
-        } else if (i == KeyEvent.VK_3) {
-            flag = 3;
-        } else if (i == KeyEvent.VK_4) {
-            flag = 4;
-        } else if (i == KeyEvent.VK_5) {
-            flag = 5;
-        } else if (i == KeyEvent.VK_6) {
-            flag = 6;
-        } else if (i == KeyEvent.VK_7) {
-            flag = 7;
-        } else if (i == KeyEvent.VK_8) {
-            flag = 8;
-        } else if (i == KeyEvent.VK_9) {
-            flag = 9;
-        } else if (i == KeyEvent.VK_F2) {
+        if (i == KeyEvent.VK_F2) {
             try {
                 save();
             } catch (IOException e1) {
@@ -268,22 +225,41 @@ public class MapEditor extends Component implements Runnable, ActionListener, Mo
             } catch (ClassNotFoundException e1) {
                 e1.printStackTrace();
             }
-        } else if ((i == KeyEvent.VK_N) && e.isControlDown()) {
-            newMap();
-            repaint();
-        } else if ((i == KeyEvent.VK_K) && e.isControlDown()) {
-            flag = 10;
-        } else if ((i == KeyEvent.VK_B) && e.isControlDown()) {
-            factionFlag = 1;
-        } else if ((i == KeyEvent.VK_R) && e.isControlDown()) {
-            factionFlag = 2;
-        } else if ((i == KeyEvent.VK_S) && e.isControlDown()) {
-            factionFlag = 0;
+        } else if (i == KeyEvent.VK_ENTER) {
+            turn();
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        posX = e.getX()/64;
+        posY = e.getY()/64;
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if ((workingMap.findTown(posX, posY) != Integer.MAX_VALUE) && (playerFlag == workingMap.getMapTown().get(workingMap.findTown(posX, posY)).getFaction())) {
+            TownFieldWindow tf = new TownFieldWindow("Town", workingMap.getMapTown().get(workingMap.findTown(posX, posY)));
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
 
     }
 }

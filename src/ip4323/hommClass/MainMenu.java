@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 /**
  * Created by dima_ on 11.05.2016.
@@ -28,7 +29,7 @@ public class MainMenu extends JFrame {
             }
         });
         controlPanel = new JPanel();
-        controlPanel.setLayout(new GridLayout(8, 1));
+        controlPanel.setLayout(new GridLayout(9, 1));
 
         mainFrame.add(controlPanel);
         mainFrame.setVisible(true);
@@ -43,10 +44,25 @@ public class MainMenu extends JFrame {
         JButton buttonHeroToHero = new JButton("HeroToHero");
         JButton buttonHeroToTown = new JButton("HeroToTown");
         JButton buttonUnit = new JButton("Unit");
+        JButton buttonGame = new JButton("Game");
 
         buttonExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                mainFrame.dispose();
+            }
+        });
+
+        buttonGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    new GlobalMapWindow("Game");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                } catch (ClassNotFoundException e1) {
+                    e1.printStackTrace();
+                }
                 mainFrame.dispose();
             }
         });
@@ -108,6 +124,7 @@ public class MainMenu extends JFrame {
             }
         });
 
+        controlPanel.add(buttonGame);
         controlPanel.add(buttonBattle);
         controlPanel.add(buttonMapEditor);
         controlPanel.add(buttonTown);
