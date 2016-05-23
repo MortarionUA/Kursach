@@ -40,7 +40,6 @@ public class MainMenu extends JFrame {
         JButton buttonMapEditor = new JButton("Map Editor");
         JButton buttonExit = new JButton("Exit");
         JButton buttonTown = new JButton("Town");
-        JButton buttonHero = new JButton("Hero");
         JButton buttonHeroToHero = new JButton("HeroToHero");
         JButton buttonHeroToTown = new JButton("HeroToTown");
         JButton buttonUnit = new JButton("Unit");
@@ -83,14 +82,6 @@ public class MainMenu extends JFrame {
             }
         });
 
-        buttonHero.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new HeroFieldWindow("Hero");
-                mainFrame.dispose();
-            }
-        });
-
         buttonHeroToHero.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -128,7 +119,6 @@ public class MainMenu extends JFrame {
         controlPanel.add(buttonBattle);
         controlPanel.add(buttonMapEditor);
         controlPanel.add(buttonTown);
-        controlPanel.add(buttonHero);
         controlPanel.add(buttonHeroToHero);
         controlPanel.add(buttonHeroToTown);
         controlPanel.add(buttonUnit);

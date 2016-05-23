@@ -13,6 +13,7 @@ public class Hero {
     private int exp;
     private int posx;
     private int posy;
+    private boolean isMoved;
     private Unit[] army = new Unit[5];
     public Hero(int nposx, int nposy, int nfaction) {
         dmgBonus = 0;
@@ -22,7 +23,17 @@ public class Hero {
         posx = nposx;
         posy = nposy;
         faction = nfaction;
+        isMoved = true;
     }
+
+    public boolean isMoved() {
+        return isMoved;
+    }
+
+    public void setMoved(boolean moved) {
+        isMoved = moved;
+    }
+
     public int getFaction() {
         return faction;
     }
@@ -34,6 +45,22 @@ public class Hero {
     }
     public int getHpBonus() {
         return hpBonus;
+    }
+
+    public int getPosX() {
+        return posx;
+    }
+
+    public void setPosX(int posx) {
+        this.posx = posx;
+    }
+
+    public int getPosY() {
+        return posy;
+    }
+
+    public void setPosY(int posy) {
+        this.posy = posy;
     }
 
     public Unit[] getArmy() {
@@ -67,11 +94,5 @@ public class Hero {
     }
     public void delarmy(int pos) {
         army[pos] = null;
-    }
-    public void move() {
-        posx--;
-        posx++;
-        posy--;
-        posy++;
     }
 }

@@ -4,19 +4,26 @@ package ip4323.hommClass;
  * Created by dima_ on 10.04.2016.
  */
 public class Player {
-    private static int faction;
     private int money;
-    private Hero[] heroes;
+    private boolean isHeroBuy;
+
+    public Player(int money) {
+        this.money = money;
+        isHeroBuy = false;
+    }
+
     public void addmoney(int income) {
         money += income;
     }
     public void delmoney(int decome) {
         money -= decome;
     }
-    public void addHero(int posx, int posy) {
-        heroes[heroes.length] = new Hero(posx, posy, faction);
+
+    public boolean isHeroBuy() {
+        return isHeroBuy;
     }
-    public void delHero(int name) {
-        heroes[name - 1] = null;
+
+    public void setHeroBuy(boolean heroBuy) {
+        isHeroBuy = heroBuy;
     }
 }

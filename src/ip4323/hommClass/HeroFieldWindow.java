@@ -8,7 +8,7 @@ import java.awt.event.WindowEvent;
  * Created by dima_ on 18.05.2016.
  */
 public class HeroFieldWindow extends Frame {
-    public HeroFieldWindow(String s) {
+    public HeroFieldWindow(String s, Hero hero) {
 
         super(s);
 
@@ -19,15 +19,7 @@ public class HeroFieldWindow extends Frame {
 
         add(pane, BorderLayout.CENTER);
 
-        Hero hero1 = new Hero(0, 0, 0);
-
-        Unit newUnit = new Unit(1, 999);
-
-        Unit army1[] = new Unit[]{null, newUnit, null, null, null};
-
-        hero1.setAllArmy(army1);
-
-        HeroField hf = new HeroField(this, 640, 512, hero1);
+        HeroField hf = new HeroField(this, 640, 512, hero);
 
         pane.add(hf);
 

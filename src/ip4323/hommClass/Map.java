@@ -8,8 +8,8 @@ import java.util.ArrayList;
  */
 public class Map implements Serializable {
     private int[][] mapTerr = new int[20][20];
-    private Hero[][] mapHero = new Hero[20][20];
     private ArrayList<Town> mapTown = new ArrayList<>();
+    private ArrayList<Hero> mapHero = new ArrayList<>();
 
     public int getTownCount() {
         return mapTown.size();
@@ -19,7 +19,7 @@ public class Map implements Serializable {
         return mapTown;
     }
 
-    public Hero[][] getMapHero() {
+    public ArrayList<Hero> getMapHero() {
         return mapHero;
     }
 
@@ -56,6 +56,29 @@ public class Map implements Serializable {
     public int findTown(int posX, int posY) {
         for(int i = 0; i < mapTown.size(); i++) {
             if ((mapTown.get(i).getPosX() == posX) && (mapTown.get(i).getPosY() == posY)) {
+                return i;
+            }
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    public void addHero(int posX, int posY, int faction) {
+        if ((findHero(posX, posY) == Integer.MAX_VALUE) && ((findHero(posX, posY+1) == Integer.MAX_VALUE)) && ((findHero(posX, posY-1) == Integer.MAX_VALUE))) {
+            mapHero.add(new Hero(posX, posY, faction));
+        } else {
+            HeroFieldWindow tf = new HeroFieldWindow("Hero", mapHero.get(findHero(posX, posY)));
+        }
+    }
+
+    public void delHero(int posX, int posY) {
+        if (findHero(posX, posY) == Integer.MAX_VALUE) {
+        }
+        else mapHero.remove(findHero(posX, posY));
+    }
+
+    public int findHero(int posX, int posY) {
+        for(int i = 0; i < mapHero.size(); i++) {
+            if ((mapHero.get(i).getPosX() == posX) && (mapHero.get(i).getPosY() == posY)) {
                 return i;
             }
         }

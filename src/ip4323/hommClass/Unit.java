@@ -98,7 +98,7 @@ public class Unit implements Serializable {
             while (tmpdmg > hp);
             return attacked;
         }
-        if (tmpdmg > attacked.hp*attacked.count) {
+        if (tmpdmg >= attacked.hp*attacked.count) {
             return null;
         }
         do {
@@ -106,13 +106,15 @@ public class Unit implements Serializable {
             attacked.hp = attacked.ovhp;
             tmpdmg -= attacked.hp;
         }
-        while (tmpdmg > attacked.hp);
+        while (tmpdmg >= attacked.hp);
+        attacked.hp -= tmpdmg;
         tmpdmg = (attacked.dmg - def)*attacked.count;
         do {
             count--;
             tmpdmg -= hp;
         }
-        while (tmpdmg > hp);
+        while (tmpdmg >= hp);
+        hp -= tmpdmg;
         return attacked;
     }
 }
