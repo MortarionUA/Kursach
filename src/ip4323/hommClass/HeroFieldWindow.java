@@ -27,7 +27,7 @@ public class HeroFieldWindow extends Frame {
 
             public void windowClosing(WindowEvent e){
 
-                System.exit(0);
+                dispose();
 
             }
 

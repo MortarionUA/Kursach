@@ -9,7 +9,7 @@ public class Player {
 
     public Player(int money) {
         this.money = money;
-        isHeroBuy = false;
+        isHeroBuy = true;
     }
 
     public void addmoney(int income) {

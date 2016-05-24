@@ -10,12 +10,12 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Created by dima_ on 09.05.2016.
  */
 class BattleField extends Component implements Runnable, ActionListener, MouseListener, MouseMotionListener {
-
 
     private int flag = 0;
 
@@ -267,14 +267,18 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
     }
 
     public void setUnit(int x, int y, Unit newUnit) {
+        System.out.println(new Date().getTime());
         for (int i=0; i<units.size(); i++) {
             if ((units.get(i).getPosx() == x) && (units.get(i).getPosy() == y)) {
                 units.set(i, newUnit);
                 if(units.get(i) == null) {
                     units.remove(i);
                 }
+                break;
             }
         }
+
+        System.out.println(new Date().getTime());
     }
 
     @Override
@@ -288,6 +292,7 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        System.out.println(new Date().getTime());
         if (ui != null) {
             ui.disappear();
         }
@@ -307,7 +312,9 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
             }
             turn();
         }
+        System.out.println(new Date().getTime());
         repaint();
+        System.out.println(new Date().getTime());
     }
 
     @Override
@@ -330,6 +337,8 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
     }
 
     public void combatPrepare(Hero player1, Hero player2) {
+        System.out.println(new Date().getTime());
+
         BattleMap bmap = new BattleMap();
         bmap.generateField();
         for (int i = 0; i < player1.getArmy().length; i++) {
@@ -363,11 +372,39 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
             }
         }
         Collections.sort(units, new CompareUnits());
+        System.out.println(new Date().getTime());
+
     }
 
     public void turn() {
+        System.out.println(new Date().getTime());
+
         flag++;
         if (flag >= units.size()) flag = 0;
+        for(int i=0; i<5; i++) {
+            if ((hero1.getArmy()[i] != null) && (hero1.getArmy()[i].getCount() <= 1)) {
+                hero1.getArmy()[i] = null;
+            }
+            if ((hero2.getArmy()[i] != null) && (hero2.getArmy()[i].getCount() <= 1)) {
+                hero2.getArmy()[i] = null;
+            }
+        }
+        int temp = 0;
+        for(int i=0; i<5; i++) {
+            if (hero1.getArmy()[i] == null) temp++;
+            if (temp == 5) {
+                f.dispose();
+            }
+        }
+        temp = 0;
+        for(int i=0; i<5; i++) {
+            if (hero2.getArmy()[i] == null) temp++;
+            if (temp == 5) {
+                f.dispose();
+            }
+        }
+        System.out.println(new Date().getTime());
+
     }
 
     class CompareUnits implements Comparator<Unit> {

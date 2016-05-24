@@ -71,9 +71,7 @@ public class Map implements Serializable {
     }
 
     public void delHero(int posX, int posY) {
-        if (findHero(posX, posY) == Integer.MAX_VALUE) {
-        }
-        else mapHero.remove(findHero(posX, posY));
+        if (findHero(posX, posY) != Integer.MAX_VALUE) mapHero.remove(findHero(posX, posY));
     }
 
     public int findHero(int posX, int posY) {

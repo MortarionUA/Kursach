@@ -118,7 +118,10 @@ public class BuildingMenu extends JFrame {
                         if (!flag) {
                             for (int i = 0; i < 5; i++) {
                                 if (htw.getTown().getArmy()[i] == null) {
-                                    htw.getTown().getArmy()[i] = new Unit(pos, (6 - pos) * (htw.getTown().getBuildings()[6] + 1));
+                                    UnitFactory unitFactory = new UnitFactory();
+                                    CreateUnit createUnit = unitFactory.getCreateUnit(pos);
+                                    htw.getTown().getArmy()[i] = createUnit.createUnit((6 - pos) * (htw.getTown().getBuildings()[6] + 1));
+                                    // htw.getTown().getArmy()[i] = new Unit(pos, (6 - pos) * (htw.getTown().getBuildings()[6] + 1));
                                     htw.getTown().setBuyFlag(false, pos - 1);
                                     break;
                                 }

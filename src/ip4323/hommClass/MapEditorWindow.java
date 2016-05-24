@@ -1,5 +1,6 @@
 package ip4323.hommClass;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -11,13 +12,9 @@ public class MapEditorWindow extends Frame {
         ScrollPane pane = new ScrollPane();
 
         pane.setSize(1280, 1280);
-        setResizable(false);
+        //setResizable(false);
 
         add(pane, BorderLayout.CENTER);
-
-//        BattleField bf = new BattleField(this, 1280, 640);
-//
-//        pane.add(bf);
 
         MapEditor me = new MapEditor(this, 1280, 1280);
 

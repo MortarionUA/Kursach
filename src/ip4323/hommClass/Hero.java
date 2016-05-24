@@ -1,11 +1,12 @@
 package ip4323.hommClass;
 
 import javax.lang.model.type.NullType;
+import java.io.Serializable;
 
 /**
  * Created by dima_ on 07.04.2016.
  */
-public class Hero {
+public class Hero implements Serializable {
     private int faction;
     private int dmgBonus;
     private int defBonus;

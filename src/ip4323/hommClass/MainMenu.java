@@ -66,14 +66,6 @@ public class MainMenu extends JFrame {
             }
         });
 
-        buttonBattle.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new BattleFieldWindow("BattleField");
-                mainFrame.dispose();
-            }
-        });
-
         buttonTown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -82,26 +74,10 @@ public class MainMenu extends JFrame {
             }
         });
 
-        buttonHeroToHero.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new HeroToHeroFieldWindow("HeroToHero");
-                mainFrame.dispose();
-            }
-        });
-
         buttonMapEditor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new MapEditorWindow("Map Editor");
-                mainFrame.dispose();
-            }
-        });
-
-        buttonHeroToTown.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new HeroToTownFieldWindow("HeroToTown");
                 mainFrame.dispose();
             }
         });

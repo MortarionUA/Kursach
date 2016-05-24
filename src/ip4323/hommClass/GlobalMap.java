@@ -4,11 +4,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by dima_ on 22.05.2016.
  */
-public class GlobalMap extends Component implements Runnable, KeyListener, MouseListener {
+public class GlobalMap extends Component implements Runnable, KeyListener, MouseListener, FocusListener {
 
     private static final int tW = 64;
     private static final int tH = 64;
@@ -46,9 +48,10 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
         h = height;
         f = frame;
 
-        enableEvents(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.KEY_EVENT_MASK);
+        enableEvents(AWTEvent.MOUSE_EVENT_MASK | AWTEvent.KEY_EVENT_MASK | AWTEvent.FOCUS_EVENT_MASK);
         addMouseListener(this);
         addKeyListener(this);
+        addFocusListener(this);
         setFocusable(true);
 
         tileset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/tileset.png"));
@@ -256,6 +259,7 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
                 }
             }
         }
+        winCheck();
     }
 
     @Override
@@ -267,6 +271,12 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
     public void keyPressed(KeyEvent e) {
         int i = e.getKeyCode();
         if (i == KeyEvent.VK_F2) {
+            try {
+                save();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } else if (i == KeyEvent.VK_F2) {
             try {
                 save();
             } catch (IOException e1) {
@@ -302,12 +312,83 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
         posY = e.getY()/64;
     }
 
+    public void winCheck() {
+        int temp1 = 0;
+        int temp2 = 0;
+        for(int i=0; i<workingMap.getMapHero().size(); i++) {
+            for(int j=0; j<5; j++) {
+                if(workingMap.getMapHero().get(i).getFaction() == 1) temp1++;
+                if(workingMap.getMapHero().get(i).getFaction() == 2) temp2++;
+            }
+        }
+        for(int i=0; i<workingMap.getMapTown().size(); i++) {
+            for(int j=0; j<5; j++) {
+                if(workingMap.getMapTown().get(i).getFaction() == 1) temp1++;
+                if(workingMap.getMapTown().get(i).getFaction() == 2) temp2++;
+            }
+        }
+        if (temp1 == 0) {
+            f.dispose();
+        }
+        if (temp2 == 0) {
+            f.dispose();
+        }
+    }
+
+    public void heroRemove() {
+        int temp = 0;
+//        ArrayList<Hero> heroList = workingMap.getMapHero();
+//        for (Iterator iterator = heroList.iterator(); iterator.hasNext(); ) {
+//            Hero next = (Hero) iterator.next();
+//            if (next.getArmy()[0] == null
+//                    && next.getArmy()[1] == null
+//                    && next.getArmy()[2] == null
+//                    && next.getArmy()[3] == null
+//                    && next.getArmy()[4] == null
+//                    ) {
+//                iterator.remove();
+//            }
+//
+//        }
+        for(int i=0; i<workingMap.getMapHero().size(); i++) {
+            for(int j=0; j<5; j++) {
+                if(workingMap.getMapHero().get(i).getArmy()[j] == null) temp++;
+            }
+            if (temp == 5) {
+                workingMap.getMapHero().remove(i);
+                temp=0;
+            }
+            temp=0;
+        }
+    }
+
     @Override
     public void mouseReleased(MouseEvent e) {
         if ((flagHeroActive != Integer.MAX_VALUE) && (workingMap.findHero(posX, posY) == Integer.MAX_VALUE)) {
             workingMap.getMapHero().get(flagHeroActive).setPosX(posX);
             workingMap.getMapHero().get(flagHeroActive).setPosY(posY);
             workingMap.getMapHero().get(flagHeroActive).setMoved(false);
+            if ((workingMap.findHero(posX-1, posY) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX-1, posY)).getFaction() != workingMap.getMapHero().get(flagHeroActive).getFaction())) {
+                BattleFieldWindow bfw = new BattleFieldWindow("battle", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX-1, posY)));
+            } else if ((workingMap.findHero(posX+1, posY) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX+1, posY)).getFaction() != workingMap.getMapHero().get(flagHeroActive).getFaction())) {
+                BattleFieldWindow bfw = new BattleFieldWindow("battle", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX+1, posY)));
+            } else if ((workingMap.findHero(posX, posY+1) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX, posY+1)).getFaction() != workingMap.getMapHero().get(flagHeroActive).getFaction())) {
+                BattleFieldWindow bfw = new BattleFieldWindow("battle", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX, posY+1)));
+            } else if ((workingMap.findHero(posX, posY-1) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX, posY-1)).getFaction() != workingMap.getMapHero().get(flagHeroActive).getFaction())) {
+                BattleFieldWindow bfw = new BattleFieldWindow("battle", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX, posY-1)));
+            } else if ((workingMap.findHero(posX-1, posY) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX-1, posY)).getFaction() == workingMap.getMapHero().get(flagHeroActive).getFaction())) {
+                HeroToHeroFieldWindow hth = new HeroToHeroFieldWindow("herotohero", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX-1, posY)));
+            } else if ((workingMap.findHero(posX+1, posY) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX+1, posY)).getFaction() == workingMap.getMapHero().get(flagHeroActive).getFaction())) {
+                HeroToHeroFieldWindow hth = new HeroToHeroFieldWindow("herotohero", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX+1, posY)));
+            } else if ((workingMap.findHero(posX, posY+1) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX, posY+1)).getFaction() == workingMap.getMapHero().get(flagHeroActive).getFaction())) {
+                HeroToHeroFieldWindow hth = new HeroToHeroFieldWindow("herotohero", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX, posY+1)));
+            } else if ((workingMap.findHero(posX, posY-1) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX, posY-1)).getFaction() == workingMap.getMapHero().get(flagHeroActive).getFaction())) {
+                HeroToHeroFieldWindow hth = new HeroToHeroFieldWindow("herotohero", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX, posY-1)));
+            } else if ((workingMap.findTown(posX, posY) != Integer.MAX_VALUE) && (workingMap.getMapTown().get(workingMap.findTown(posX, posY)).getFaction() == workingMap.getMapHero().get(flagHeroActive).getFaction())) {
+                HeroToTownFieldWindow hth = new HeroToTownFieldWindow("herototown", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapTown().get(workingMap.findTown(posX, posY)));
+            } else if ((workingMap.findTown(posX, posY) != Integer.MAX_VALUE) && (workingMap.getMapTown().get(workingMap.findTown(posX, posY)).getFaction() != workingMap.getMapHero().get(flagHeroActive).getFaction())) {
+                workingMap.getMapTown().get(workingMap.findTown(posX, posY)).setFaction(workingMap.getMapHero().get(flagHeroActive).getFaction());
+            }
             flagHeroActive = Integer.MAX_VALUE;
         } else if ((workingMap.findHero(posX, posY) != Integer.MAX_VALUE) && (playerFlag == workingMap.getMapHero().get(workingMap.findHero(posX, posY)).getFaction()) && (workingMap.getMapHero().get(workingMap.findHero(posX, posY)).isMoved() == true)) {
             flagHeroActive = workingMap.findHero(posX, posY);
@@ -333,6 +414,17 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
 
     @Override
     public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+        heroRemove();
+        repaint();
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
 
     }
 }
