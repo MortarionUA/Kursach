@@ -10,7 +10,7 @@ public class TownFieldWindow extends Frame {
 
     private Town town;
 
-    public TownFieldWindow(String s, Town town) {
+    public TownFieldWindow(String s, Town town, Player player) {
 
         super(s);
 
@@ -35,7 +35,7 @@ public class TownFieldWindow extends Frame {
 
         this.town = town;
 
-        TownField tf = new TownField(this, 576, 256, town);
+        TownField tf = new TownField(this, 576, 256, town, player);
 
         pane.add(tf);
 

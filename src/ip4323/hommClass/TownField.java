@@ -33,13 +33,20 @@ public class TownField extends Component implements Runnable, MouseListener {
 
     protected Frame f;
 
+    private Player player;
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
     private Numbers numbers[] = new Numbers[]{Numbers.zero, Numbers.one, Numbers.two, Numbers.three, Numbers.four, Numbers.five, Numbers.six, Numbers.seven, Numbers.eight, Numbers.nine};
 
-    public TownField(Frame frame, int width, int height, Town newTown) {
+    public TownField(Frame frame, int width, int height, Town newTown, Player player) {
         w = width;
         h = height;
         f = frame;
         town = newTown;
+        this.player = player;
 
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
         addMouseListener(this);
@@ -231,12 +238,14 @@ public class TownField extends Component implements Runnable, MouseListener {
         }
         if((posY == 1) && (posX < 6)) {
             BuildingMenu bm = new BuildingMenu();
+            bm.setPlayer(player);
             bm.setTw(this);
             bm.setResizable(false);
             bm.showButton(posX);
         }
         else if (((posY == 0) || (posY == 1)) && ((posX > 5) && (posX < 9))) {
             BuildingMenu bm = new BuildingMenu();
+            bm.setPlayer(player);
             bm.setTw(this);
             bm.setResizable(false);
             bm.showButton(6);

@@ -6,7 +6,7 @@ package ip4323.hommClass;
 public class CreateCatapult implements CreateUnit {
     @Override
     public Unit createUnit(int count) {
-        Unit unit = new Unit(1, count);
+        Unit unit = new Unit(4, count);
         unit.setDmg(4);
         unit.setDef(0);
         unit.setOvhp(5);

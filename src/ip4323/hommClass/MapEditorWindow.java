@@ -11,12 +11,12 @@ public class MapEditorWindow extends Frame {
 
         ScrollPane pane = new ScrollPane();
 
-        pane.setSize(1280, 1280);
+        pane.setSize(1280, 960);
         //setResizable(false);
 
         add(pane, BorderLayout.CENTER);
 
-        MapEditor me = new MapEditor(this, 1280, 1280);
+        MapEditor me = new MapEditor(this, 1280, 960);
 
         pane.add(me);
 

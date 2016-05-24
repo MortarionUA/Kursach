@@ -35,15 +35,18 @@ public class HeroToTownField extends Component implements Runnable, MouseListene
 
     protected Frame f;
 
+    private Player player;
+
     private Numbers numbers[] = new Numbers[]{Numbers.zero, Numbers.one, Numbers.two, Numbers.three, Numbers.four, Numbers.five, Numbers.six, Numbers.seven, Numbers.eight, Numbers.nine};
     private NumbersBig numbersBig[] = new NumbersBig[]{NumbersBig.BIG_ZERO, NumbersBig.BIG_ONE, NumbersBig.BIG_TWO, NumbersBig.BIG_THREE, NumbersBig.BIG_FOUR, NumbersBig.BIG_FIVE, NumbersBig.BIG_SIX, NumbersBig.BIG_SEVEN, NumbersBig.BIG_EIGHT, NumbersBig.BIG_NINE};
 
-    public HeroToTownField(Frame frame, int width, int height, Hero hero, Town town) {
+    public HeroToTownField(Frame frame, int width, int height, Hero hero, Town town, Player player) {
         w = width;
         h = height;
         f = frame;
         this.hero = hero;
         this.town = town;
+        this.player = player;
 
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
         addMouseListener(this);
@@ -306,34 +309,60 @@ public class HeroToTownField extends Component implements Runnable, MouseListene
         int nposY = e.getY()/64;
         if ((posY == 3) && ((posX == 2) || (posX == 3) || (posX == 4) || (posX == 5) || (posX == 6))) {
             Unit tmp = town.getArmy()[posX - 2];
-            if ((nposY == 3) && ((nposX == 2) || (nposX == 3) || (nposX == 4) || (nposX == 5) || (nposX == 6))) {
-                town.setArmy(town.getArmy()[nposX - 2], posX - 2);
-                town.setArmy(tmp, nposX - 2);
+            if ((nposY == 3) && ((nposX == 2) || (nposX == 3) || (nposX == 4) || (nposX == 5) || (nposX == 6)) && (posX != nposX)) {
+                if ((town.getArmy()[nposX - 2] != null) && (tmp.getType() == town.getArmy()[nposX - 2].getType())) {
+                    town.getArmy()[nposX - 2].setCount(town.getArmy()[nposX - 2].getCount() + tmp.getCount());
+                    town.getArmy()[posX - 2] = null;
+                }
+                else {
+                    town.setArmy(town.getArmy()[nposX - 2], posX - 2);
+                    town.setArmy(tmp, nposX - 2);
+                }
             }
             if ((nposY == 6) && ((nposX == 4) || (nposX == 5) || (nposX == 6) || (nposX == 7) || (nposX == 8))) {
-                town.setArmy(hero.getArmy()[nposX - 4], posX - 2);
-                hero.setArmy(tmp, nposX - 4);
+                if ((hero.getArmy()[nposX - 4] != null) && (tmp.getType() == hero.getArmy()[nposX - 4].getType())) {
+                    hero.getArmy()[nposX - 4].setCount(hero.getArmy()[nposX - 4].getCount() + tmp.getCount());
+                    town.getArmy()[posX - 2] = null;
+                }
+                else {
+                    town.setArmy(hero.getArmy()[nposX - 4], posX - 2);
+                    hero.setArmy(tmp, nposX - 4);
+                }
             }
         }
         if ((posY == 6) && ((posX == 4) || (posX == 5) || (posX == 6) || (posX == 7) || (posX == 8))) {
             Unit tmp = hero.getArmy()[posX - 4];
             if ((nposY == 3) && ((nposX == 2) || (nposX == 3) || (nposX == 4) || (nposX == 5) || (nposX == 6))) {
-                hero.setArmy(town.getArmy()[nposX - 2], posX - 4);
-                town.setArmy(tmp, nposX - 2);
+                if ((town.getArmy()[nposX - 2] != null) && (tmp.getType() == town.getArmy()[nposX - 2].getType())) {
+                    town.getArmy()[nposX - 2].setCount(town.getArmy()[nposX - 2].getCount() + tmp.getCount());
+                    hero.getArmy()[posX - 4] = null;
+                }
+                else {
+                    hero.setArmy(town.getArmy()[nposX - 2], posX - 4);
+                    town.setArmy(tmp, nposX - 2);
+                }
             }
-            if ((nposY == 6) && ((nposX == 4) || (nposX == 5) || (nposX == 6) || (nposX == 7) || (nposX == 8))) {
-                hero.setArmy(hero.getArmy()[nposX - 4], posX - 4);
-                hero.setArmy(tmp, nposX - 4);
+            if ((nposY == 6) && ((nposX == 4) || (nposX == 5) || (nposX == 6) || (nposX == 7) || (nposX == 8)) && (posX != nposX)) {
+                if ((hero.getArmy()[nposX - 4] != null) && (tmp.getType() == hero.getArmy()[nposX - 4].getType())) {
+                    hero.getArmy()[nposX - 4].setCount(hero.getArmy()[nposX - 4].getCount() + tmp.getCount());
+                    hero.getArmy()[posX - 4] = null;
+                }
+                else {
+                    hero.setArmy(hero.getArmy()[nposX - 4], posX - 4);
+                    hero.setArmy(tmp, nposX - 4);
+                }
             }
         }
         if((posY == 1) && (posX < 6)) {
             BuildingMenu bm = new BuildingMenu();
+            bm.setPlayer(player);
             bm.setHtw(this);
             bm.setResizable(false);
             bm.showButton(posX);
         }
         else if (((posY == 0) || (posY == 1)) && ((posX > 5) && (posX < 9))) {
             BuildingMenu bm = new BuildingMenu();
+            bm.setPlayer(player);
             bm.setHtw(this);
             bm.setResizable(false);
             bm.showButton(6);

@@ -26,8 +26,8 @@ public class MapEditor extends Component implements Runnable, ActionListener, Mo
     private int flag = 0;
     private int factionFlag = 0;
 
-    private Tile map2[][] = new Tile[20][20];
-    private Factions map3[][] = new Factions[20][20];
+    private Tile map2[][] = new Tile[20][15];
+    private Factions map3[][] = new Factions[20][15];
 
     protected int w, h;
 
@@ -63,7 +63,7 @@ public class MapEditor extends Component implements Runnable, ActionListener, Mo
 
     public void convertMap() {
         for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+            for (int j = 0; j < 15; j++) {
                 map3[i][j] = Factions.T1;
                 switch (workingMap.getMapTerr()[i][j]) {
                     case 0:
@@ -126,13 +126,13 @@ public class MapEditor extends Component implements Runnable, ActionListener, Mo
     public void paint(Graphics g) {
         convertMap();
         if (grphImage == null) {
-            grphImage = (BufferedImage) createImage(1280, 1280);
+            grphImage = (BufferedImage) createImage(1280, 960);
         }
         grph = grphImage.getGraphics();
         grph.setColor(Color.WHITE);
         grph.fillRect(0, 0, getWidth(), getHeight());
         for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+            for (int j = 0; j < 15; j++) {
                 drawTile(grph, map2[i][j], i * tW, j * tH);
                 drawFaction(grph, map3[i][j], i * tW, j * tH);
             }

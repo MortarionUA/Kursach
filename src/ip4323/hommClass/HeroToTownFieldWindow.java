@@ -9,7 +9,7 @@ import java.awt.event.WindowEvent;
  * Created by dima_ on 19.05.2016.
  */
 public class HeroToTownFieldWindow extends JFrame {
-    public HeroToTownFieldWindow (String s, Hero hero, Town town) {
+    public HeroToTownFieldWindow (String s, Hero hero, Town town, Player player) {
 
         super(s);
 
@@ -20,7 +20,7 @@ public class HeroToTownFieldWindow extends JFrame {
 
         add(pane, BorderLayout.CENTER);
 
-        HeroToTownField hf = new HeroToTownField(this, 640, 512, hero, town);
+        HeroToTownField hf = new HeroToTownField(this, 640, 512, hero, town, player);
 
         pane.add(hf);
 

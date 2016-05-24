@@ -15,11 +15,12 @@ public class BuildingMenu extends JFrame {
     private JPanel controlPanel;
     private TownField tw;
     private HeroToTownField htw;
+    private Player player;
 
-    public void setTw(TownField tw) {
-        this.tw = tw;
+    public void setTw(TownField tw) {this.tw = tw;
     }
     public void setHtw(HeroToTownField htw) {this.htw = htw; }
+    public void setPlayer(Player player) {this.player = player; }
 
     public BuildingMenu() {
         prepareGUI();
@@ -57,18 +58,20 @@ public class BuildingMenu extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(tw != null) {
-                    if (tw.getTown().getBuildFlag()) {
+                    if (tw.getTown().getBuildFlag() && (player.getMoney() > 1000)) {
                         tw.getTown().getBuildings()[pos]++;
                         tw.getTown().setBuildFlag(false);
+                        player.delmoney(pos * 1000);
                         if ((pos > 0) && (pos < 6)) {
                             tw.getTown().setBuyFlag(true, pos - 1);
                         }
                     }
                     tw.repaint();
                 } else {
-                    if (htw.getTown().getBuildFlag()) {
+                    if (htw.getTown().getBuildFlag() && (player.getMoney() > 1000)) {
                         htw.getTown().getBuildings()[pos]++;
                         htw.getTown().setBuildFlag(false);
+                        player.delmoney(pos * 1000);
                         if ((pos > 0) && (pos < 6)) {
                             htw.getTown().setBuyFlag(true, pos - 1);
                         }
@@ -95,9 +98,12 @@ public class BuildingMenu extends JFrame {
                         }
                         if (!flag) {
                             for (int i = 0; i < 5; i++) {
-                                if (tw.getTown().getArmy()[i] == null) {
-                                    tw.getTown().getArmy()[i] = new Unit(pos, (6 - pos) * (tw.getTown().getBuildings()[6] + 1));
+                                if ((tw.getTown().getArmy()[i] == null) && (player.getMoney() > (pos * (6 - pos) * (tw.getTown().getBuildings()[6] + 1)))){
+                                    UnitFactory unitFactory = new UnitFactory();
+                                    CreateUnit createUnit = unitFactory.getCreateUnit(pos);
+                                    tw.getTown().getArmy()[i] = createUnit.createUnit((6 - pos) * (tw.getTown().getBuildings()[6] + 1));
                                     tw.getTown().setBuyFlag(false, pos - 1);
+                                    player.delmoney(pos * (6 - pos) * (tw.getTown().getBuildings()[6] + 1));
                                     break;
                                 }
                             }
@@ -117,11 +123,11 @@ public class BuildingMenu extends JFrame {
                         }
                         if (!flag) {
                             for (int i = 0; i < 5; i++) {
-                                if (htw.getTown().getArmy()[i] == null) {
+                                if ((htw.getTown().getArmy()[i] == null) && (player.getMoney() > (pos * (6 - pos) * (htw.getTown().getBuildings()[6] + 1)))) {
                                     UnitFactory unitFactory = new UnitFactory();
                                     CreateUnit createUnit = unitFactory.getCreateUnit(pos);
                                     htw.getTown().getArmy()[i] = createUnit.createUnit((6 - pos) * (htw.getTown().getBuildings()[6] + 1));
-                                    // htw.getTown().getArmy()[i] = new Unit(pos, (6 - pos) * (htw.getTown().getBuildings()[6] + 1));
+                                    player.delmoney(pos * (6 - pos) * (htw.getTown().getBuildings()[6] + 1));
                                     htw.getTown().setBuyFlag(false, pos - 1);
                                     break;
                                 }

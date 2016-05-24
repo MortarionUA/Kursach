@@ -255,24 +255,48 @@ public class HeroToHeroField extends Component implements Runnable, MouseListene
         int nposY = e.getY()/64;
         if ((posY == 1) && ((posX == 4) || (posX == 5) || (posX == 6) || (posX == 7) || (posX == 8))) {
             Unit tmp = hero1.getArmy()[posX - 4];
-            if ((nposY == 1) && ((nposX == 4) || (nposX == 5) || (nposX == 6) || (nposX == 7) || (nposX == 8))) {
-                hero1.setArmy(hero1.getArmy()[nposX - 4], posX - 4);
-                hero1.setArmy(tmp, nposX - 4);
+            if ((nposY == 1) && ((nposX == 4) || (nposX == 5) || (nposX == 6) || (nposX == 7) || (nposX == 8)) && (posX != nposX)) {
+                if ((hero1.getArmy()[nposX - 4] != null) && (tmp.getType() == hero1.getArmy()[nposX - 4].getType())) {
+                    hero1.getArmy()[nposX - 4].setCount(hero1.getArmy()[nposX - 4].getCount() + tmp.getCount());
+                    hero1.getArmy()[posX - 4] = null;
+                }
+                else {
+                    hero1.setArmy(hero1.getArmy()[nposX - 4], posX - 4);
+                    hero1.setArmy(tmp, nposX - 4);
+                }
             }
             if ((nposY == 6) && ((nposX == 4) || (nposX == 5) || (nposX == 6) || (nposX == 7) || (nposX == 8))) {
-                hero1.setArmy(hero2.getArmy()[nposX - 4], posX - 4);
-                hero2.setArmy(tmp, nposX - 4);
+                if ((hero2.getArmy()[nposX - 4] != null) && (tmp.getType() == hero2.getArmy()[nposX - 4].getType())) {
+                    hero2.getArmy()[nposX - 4].setCount(hero2.getArmy()[nposX - 4].getCount() + tmp.getCount());
+                    hero1.getArmy()[posX - 4] = null;
+                }
+                else {
+                    hero1.setArmy(hero2.getArmy()[nposX - 4], posX - 4);
+                    hero2.setArmy(tmp, nposX - 4);
+                }
             }
         }
         if ((posY == 6) && ((posX == 4) || (posX == 5) || (posX == 6) || (posX == 7) || (posX == 8))) {
             Unit tmp = hero2.getArmy()[posX - 4];
             if ((nposY == 1) && ((nposX == 4) || (nposX == 5) || (nposX == 6) || (nposX == 7) || (nposX == 8))) {
-                hero2.setArmy(hero1.getArmy()[nposX - 4], posX - 4);
-                hero1.setArmy(tmp, nposX - 4);
+                if ((hero1.getArmy()[nposX - 4] != null) && (tmp.getType() == hero1.getArmy()[nposX - 4].getType())) {
+                    hero1.getArmy()[nposX - 4].setCount(hero1.getArmy()[nposX - 4].getCount() + tmp.getCount());
+                    hero2.getArmy()[posX - 4] = null;
+                }
+                else {
+                    hero2.setArmy(hero1.getArmy()[nposX - 4], posX - 4);
+                    hero1.setArmy(tmp, nposX - 4);
+                }
             }
-            if ((nposY == 6) && ((nposX == 4) || (nposX == 5) || (nposX == 6) || (nposX == 7) || (nposX == 8))) {
-                hero2.setArmy(hero2.getArmy()[nposX - 4], posX - 4);
-                hero2.setArmy(tmp, nposX - 4);
+            if ((nposY == 6) && ((nposX == 4) || (nposX == 5) || (nposX == 6) || (nposX == 7) || (nposX == 8)) && (posX != nposX)) {
+                if ((hero2.getArmy()[nposX - 4] != null) && (tmp.getType() == hero1.getArmy()[nposX - 4].getType())) {
+                    hero2.getArmy()[nposX - 4].setCount(hero2.getArmy()[nposX - 4].getCount() + tmp.getCount());
+                    hero2.getArmy()[posX - 4] = null;
+                }
+                else {
+                    hero2.setArmy(hero2.getArmy()[nposX - 4], posX - 4);
+                    hero2.setArmy(tmp, nposX - 4);
+                }
             }
         }
         repaint();

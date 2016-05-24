@@ -18,16 +18,18 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
     private Image unitset;
     private Image tileset;
     private Image highlightset;
+    private Image numberset;
     private Image factionset;
-    private boolean[][] highMap = new boolean[20][20];
+
+    private boolean[][] highMap = new boolean[20][15];
 
     private Thread t;
     private Graphics grph;
     private BufferedImage grphImage;
 
     private Map workingMap;
-    private Tile map2[][] = new Tile[20][20];
-    private Factions map3[][] = new Factions[20][20];
+    private Tile map2[][] = new Tile[20][15];
+    private Factions map3[][] = new Factions[20][15];
 
     int posX, posY;
 
@@ -36,12 +38,14 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
     private int buyHeroFlag = 0;
     private int dayFlag;
 
-    private Player player1 = new Player(0);
-    private Player player2 = new Player(0);
+    private Player player1 = new Player(2500);
+    private Player player2 = new Player(2500);
 
     protected int w, h;
 
     protected Frame f;
+
+    private Numbers numbers[] = new Numbers[]{Numbers.zero, Numbers.one, Numbers.two, Numbers.three, Numbers.four, Numbers.five, Numbers.six, Numbers.seven, Numbers.eight, Numbers.nine};
 
     public GlobalMap(Frame frame, int width, int height) throws IOException, ClassNotFoundException {
         w = width;
@@ -58,6 +62,7 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
         factionset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/fractions.png"));
         highlightset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/highlight.png"));
         unitset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/human units.png"));
+        numberset = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("Resource/numbers.png"));
 
         mInit();
     }
@@ -76,7 +81,7 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
 
     public void convertMap() {
         for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+            for (int j = 0; j < 15; j++) {
                 map3[i][j] = Factions.T1;
                 switch (workingMap.getMapTerr()[i][j]) {
                     case 0:
@@ -139,13 +144,13 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
     public void paint(Graphics g) {
         convertMap();
         if (grphImage == null) {
-            grphImage = (BufferedImage) createImage(1280, 1280);
+            grphImage = (BufferedImage) createImage(1280, 960);
         }
         grph = grphImage.getGraphics();
         grph.setColor(Color.WHITE);
         grph.fillRect(0, 0, getWidth(), getHeight());
         for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
+            for (int j = 0; j < 15; j++) {
                 drawTile(grph, map2[i][j], i * tW, j * tH);
                 drawFaction(grph, map3[i][j], i * tW, j * tH);
             }
@@ -163,12 +168,58 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
             drawhigh(workingMap.getMapHero().get(flagHeroActive).getPosX() * tW, workingMap.getMapHero().get(flagHeroActive).getPosY() * tH, 7);
             drawPath(grph);
         }
+        if(player1.getMoney()/10000 >= 1) {
+            drawNumber(grph, numbers[player1.getMoney() / 10000], 48, (14 * tH) + 48);
+            drawNumber(grph, numbers[player1.getMoney() % 10000 / 1000], tW, (14 * tH) + 48);
+            drawNumber(grph, numbers[player1.getMoney() % 1000 / 100], tW + 16, (14 * tH) + 48);
+            drawNumber(grph, numbers[player1.getMoney() % 100 / 10], tW + 32, (14 * tH) + 48);
+            drawNumber(grph, numbers[player1.getMoney() % 10], tW + 48, (14 * tH) + 48);
+        } else if(player1.getMoney()/1000 >= 1) {
+            drawNumber(grph, numbers[player1.getMoney()/1000], tW, (14 * tH) + 48);
+            drawNumber(grph, numbers[player1.getMoney()%1000/100], tW + 16, (14 * tH) + 48);
+            drawNumber(grph, numbers[player1.getMoney()%100/10], tW + 32, (14 * tH) + 48);
+            drawNumber(grph, numbers[player1.getMoney()%10], tW + 48, (14 * tH) + 48);
+        } else if(player1.getMoney()/100 >= 1) {
+            drawNumber(grph, numbers[player1.getMoney()/100], tW + 16, (14 * tH) + 48);
+            drawNumber(grph, numbers[player1.getMoney()%100/10], tW + 32, (14 * tH) + 48);
+            drawNumber(grph, numbers[player1.getMoney()%10], tW + 48, (14 * tH) + 48);
+
+        } else if(player1.getMoney()/10 >= 1) {
+            drawNumber(grph, numbers[player1.getMoney()/10], tW + 32, (14 * tH) + 48);
+            drawNumber(grph, numbers[player1.getMoney()%10], tW + 48, (14 * tH) + 48);
+
+        } else {
+            drawNumber(grph, numbers[player1.getMoney()], tW + 48, (14 * tH) + 48);
+        }
+        if(player2.getMoney()/10000 >= 1) {
+            drawNumber(grph, numbers[player2.getMoney() / 10000], (18 * tW) + 48, 48);
+            drawNumber(grph, numbers[player2.getMoney() % 10000 / 1000],  19 * tW, 48);
+            drawNumber(grph, numbers[player2.getMoney() % 1000 / 100], (19 * tW) + 16, 48);
+            drawNumber(grph, numbers[player2.getMoney() % 100 / 10], (19 * tW) + 32, 48);
+            drawNumber(grph, numbers[player2.getMoney() % 10], (19 * tW) + 48, 48);
+        } else if(player2.getMoney()/1000 >= 1) {
+            drawNumber(grph, numbers[player2.getMoney()/1000], (19 * tW), 48);
+            drawNumber(grph, numbers[player2.getMoney()%1000/100], (19 * tW) + 16, 48);
+            drawNumber(grph, numbers[player2.getMoney()%100/10], (19 * tW) + 32, 48);
+            drawNumber(grph, numbers[player2.getMoney()%10], (19 * tW) + 48, 48);
+        } else if(player2.getMoney()/100 >= 1) {
+            drawNumber(grph, numbers[player2.getMoney()/100], (19 * tW) + 16, 48);
+            drawNumber(grph, numbers[player2.getMoney()%100/10], (19 * tW) + 32, 48);
+            drawNumber(grph, numbers[player2.getMoney()%10], (19 * tW) + 48, 48);
+
+        } else if(player2.getMoney()/10 >= 1) {
+            drawNumber(grph, numbers[player2.getMoney()/10], (19 * tW) + 32, 48);
+            drawNumber(grph, numbers[player2.getMoney()%10], (19 * tW) + 48, 48);
+
+        } else {
+            drawNumber(grph, numbers[player2.getMoney()], (19 * tW) + 48, 48);
+        }
         g.drawImage(grphImage, 0, 0, this);
     }
 
     public void cleanhigh() {
         for(int i=0; i<20; i++) {
-            for(int j=0; j<20; j++) {
+            for(int j=0; j<15; j++) {
                 highMap[i][j] = false;
             }
         }
@@ -177,7 +228,7 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
     protected void drawhigh(int x, int y, int moves) {
         int tempX = x/64;
         int tempY = y/64;
-        if ((x >= 1280) || (y >= 1280) || (x < 0) || (y < 0)) {return;}
+        if ((x >= 1280) || (y >= 960) || (x < 0) || (y < 0)) {return;}
         if ((map2[tempX][tempY] == Tile.MOUNT) || (moves < 1)) {return;}
         if ((map2[tempX][tempY] == Tile.HILL1) || (map2[tempX][tempY] == Tile.HILL2)) {
             moves--;
@@ -194,7 +245,7 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
 
     protected void drawPath(Graphics g) {
         for(int i=0; i<20; i++) {
-            for(int j=0; j<20; j++) {
+            for(int j=0; j<15; j++) {
                 int x = i * tW;
                 int y = j * tH;
                 if (highMap[i][j] == true) {
@@ -202,6 +253,14 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
                 }
             }
         }
+    }
+
+    protected void drawNumber(Graphics g, Numbers n, int x, int y) {
+        int numX = 16;
+        int numY = 16;
+        int mx = n.ordinal() % 10;
+        int my = n.ordinal() / 10;
+        g.drawImage(numberset, x, y, x + numX, y + numY, mx * numX, my * numY, mx * numX + numX, my * numY + numY, this);
     }
 
     protected void drawFaction(Graphics g, Factions t, int x, int y) {
@@ -244,12 +303,19 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
             playerFlag = 1;
             for(int i=0; i<workingMap.getMapTown().size(); i++) {
                 workingMap.getMapTown().get(i).setBuildFlag(true);
+                if(workingMap.getMapTown().get(i).getFaction() == 1) {
+                    player1.addmoney(workingMap.getMapTown().get(i).getBuildings()[0] * 500 + 500);
+                    System.out.println(workingMap.getMapTown().get(i).getBuildings()[0] * 500 + 500);
+                } else {
+                    player2.addmoney(workingMap.getMapTown().get(i).getBuildings()[0] * 500 + 500);
+                    System.out.println(workingMap.getMapTown().get(i).getBuildings()[0] * 500 + 500);
+                }
             }
             for(int i=0; i < workingMap.getMapHero().size(); i++) {
                 workingMap.getMapHero().get(i).setMoved(true);
             }
-                player1.setHeroBuy(true);
-                player2.setHeroBuy(true);
+            player1.setHeroBuy(true);
+            player2.setHeroBuy(true);
         }
         if (dayFlag >= 14) {
             dayFlag = 0;
@@ -363,29 +429,55 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
     }
 
     @Override
+    /**
+     * Invoked when a mouse button has been released.
+     *
+     * @param  e MouseEvent
+     */
     public void mouseReleased(MouseEvent e) {
         if ((flagHeroActive != Integer.MAX_VALUE) && (workingMap.findHero(posX, posY) == Integer.MAX_VALUE)) {
             workingMap.getMapHero().get(flagHeroActive).setPosX(posX);
             workingMap.getMapHero().get(flagHeroActive).setPosY(posY);
             workingMap.getMapHero().get(flagHeroActive).setMoved(false);
             if ((workingMap.findHero(posX-1, posY) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX-1, posY)).getFaction() != workingMap.getMapHero().get(flagHeroActive).getFaction())) {
-                BattleFieldWindow bfw = new BattleFieldWindow("battle", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX-1, posY)));
+                //BattleFieldWindow bfw = new BattleFieldWindow("battle", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX-1, posY)));
+                Command command = new BattleCommand( workingMap,flagHeroActive,posX-1, posY);
+                command.execute();
             } else if ((workingMap.findHero(posX+1, posY) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX+1, posY)).getFaction() != workingMap.getMapHero().get(flagHeroActive).getFaction())) {
-                BattleFieldWindow bfw = new BattleFieldWindow("battle", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX+1, posY)));
+                //BattleFieldWindow bfw = new BattleFieldWindow("battle", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX+1, posY)));
+                Command command = new BattleCommand( workingMap,flagHeroActive,posX+1, posY);
+                command.execute();
             } else if ((workingMap.findHero(posX, posY+1) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX, posY+1)).getFaction() != workingMap.getMapHero().get(flagHeroActive).getFaction())) {
-                BattleFieldWindow bfw = new BattleFieldWindow("battle", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX, posY+1)));
+                //BattleFieldWindow bfw = new BattleFieldWindow("battle", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX, posY+1)));
+                Command command = new BattleCommand( workingMap,flagHeroActive,posX, posY+1);
+                command.execute();
             } else if ((workingMap.findHero(posX, posY-1) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX, posY-1)).getFaction() != workingMap.getMapHero().get(flagHeroActive).getFaction())) {
-                BattleFieldWindow bfw = new BattleFieldWindow("battle", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX, posY-1)));
+                //BattleFieldWindow bfw = new BattleFieldWindow("battle", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX, posY-1)));
+                Command command = new BattleCommand( workingMap,flagHeroActive,posX, posY-1);
+                command.execute();
             } else if ((workingMap.findHero(posX-1, posY) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX-1, posY)).getFaction() == workingMap.getMapHero().get(flagHeroActive).getFaction())) {
-                HeroToHeroFieldWindow hth = new HeroToHeroFieldWindow("herotohero", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX-1, posY)));
+                //HeroToHeroFieldWindow hth = new HeroToHeroFieldWindow("herotohero", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX-1, posY)));
+                Command command = new HeroToHeroCommand( workingMap,flagHeroActive,posX-1, posY);
+                command.execute();
             } else if ((workingMap.findHero(posX+1, posY) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX+1, posY)).getFaction() == workingMap.getMapHero().get(flagHeroActive).getFaction())) {
-                HeroToHeroFieldWindow hth = new HeroToHeroFieldWindow("herotohero", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX+1, posY)));
+                //HeroToHeroFieldWindow hth = new HeroToHeroFieldWindow("herotohero", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX+1, posY)));
+                Command command = new HeroToHeroCommand( workingMap,flagHeroActive,posX+1, posY);
+                command.execute();
             } else if ((workingMap.findHero(posX, posY+1) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX, posY+1)).getFaction() == workingMap.getMapHero().get(flagHeroActive).getFaction())) {
-                HeroToHeroFieldWindow hth = new HeroToHeroFieldWindow("herotohero", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX, posY+1)));
+                //HeroToHeroFieldWindow hth = new HeroToHeroFieldWindow("herotohero", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX, posY+1)));
+                Command command = new HeroToHeroCommand( workingMap,flagHeroActive,posX, posY+1);
+                command.execute();
             } else if ((workingMap.findHero(posX, posY-1) != Integer.MAX_VALUE) && (workingMap.getMapHero().get(workingMap.findHero(posX, posY-1)).getFaction() == workingMap.getMapHero().get(flagHeroActive).getFaction())) {
-                HeroToHeroFieldWindow hth = new HeroToHeroFieldWindow("herotohero", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX, posY-1)));
+                //HeroToHeroFieldWindow hth = new HeroToHeroFieldWindow("herotohero", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapHero().get(workingMap.findHero(posX, posY-1)));
+                Command command = new HeroToHeroCommand( workingMap,flagHeroActive,posX, posY-1);
+                command.execute();
             } else if ((workingMap.findTown(posX, posY) != Integer.MAX_VALUE) && (workingMap.getMapTown().get(workingMap.findTown(posX, posY)).getFaction() == workingMap.getMapHero().get(flagHeroActive).getFaction())) {
-                HeroToTownFieldWindow hth = new HeroToTownFieldWindow("herototown", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapTown().get(workingMap.findTown(posX, posY)));
+                if (playerFlag == 1) {
+                    HeroToTownFieldWindow hth = new HeroToTownFieldWindow("herototown", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapTown().get(workingMap.findTown(posX, posY)), player1);
+                }
+                else {
+                    HeroToTownFieldWindow hth = new HeroToTownFieldWindow("herototown", workingMap.getMapHero().get(flagHeroActive), workingMap.getMapTown().get(workingMap.findTown(posX, posY)), player2);
+                }
             } else if ((workingMap.findTown(posX, posY) != Integer.MAX_VALUE) && (workingMap.getMapTown().get(workingMap.findTown(posX, posY)).getFaction() != workingMap.getMapHero().get(flagHeroActive).getFaction())) {
                 workingMap.getMapTown().get(workingMap.findTown(posX, posY)).setFaction(workingMap.getMapHero().get(flagHeroActive).getFaction());
             }
@@ -402,7 +494,11 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
         } else if ((workingMap.findHero(posX, posY) != Integer.MAX_VALUE) && (playerFlag == workingMap.getMapHero().get(workingMap.findHero(posX, posY)).getFaction()) && (e.getModifiers()== InputEvent.BUTTON3_MASK)) {
             HeroFieldWindow tf = new HeroFieldWindow("Hero", workingMap.getMapHero().get(workingMap.findHero(posX, posY)));
         } else if ((workingMap.findTown(posX, posY) != Integer.MAX_VALUE) && (playerFlag == workingMap.getMapTown().get(workingMap.findTown(posX, posY)).getFaction()) && (e.getModifiers()== InputEvent.BUTTON3_MASK)) {
-            TownFieldWindow tf = new TownFieldWindow("Town", workingMap.getMapTown().get(workingMap.findTown(posX, posY)));
+            if (playerFlag == 1) {
+                TownFieldWindow tf = new TownFieldWindow("Town", workingMap.getMapTown().get(workingMap.findTown(posX, posY)), player1);
+            } else {
+                TownFieldWindow tf = new TownFieldWindow("Town", workingMap.getMapTown().get(workingMap.findTown(posX, posY)), player2);
+            }
         }
         repaint();
     }

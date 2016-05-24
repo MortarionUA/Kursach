@@ -7,12 +7,12 @@ import java.io.Serializable;
  */
 public class Unit implements Serializable {
     private int type;
-    private int ovhp = 5;
+    private int ovhp;
     private int hp;
-    private int dmg = 1;
-    private int def = 0;
-    private int count = 15;
-    private int speed = 15;
+    private int dmg;
+    private int def;
+    private int count;
+    private int speed;
     private int posx;
     private int posy;
     private int playerHave;

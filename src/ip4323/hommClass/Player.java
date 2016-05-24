@@ -12,6 +12,10 @@ public class Player {
         isHeroBuy = true;
     }
 
+    public int getMoney() {
+        return money;
+    }
+
     public void addmoney(int income) {
         money += income;
     }

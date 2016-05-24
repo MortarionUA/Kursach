@@ -15,12 +15,12 @@ public class GlobalMapWindow extends Frame {
 
         ScrollPane pane = new ScrollPane();
 
-        pane.setSize(1280, 1280);
+        pane.setSize(1280, 960);
         setResizable(false);
 
         add(pane, BorderLayout.CENTER);
 
-        GlobalMap me = new GlobalMap(this, 1280, 1280);
+        GlobalMap me = new GlobalMap(this, 1280, 960);
 
         pane.add(me);
 

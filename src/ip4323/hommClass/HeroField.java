@@ -197,8 +197,13 @@ public class HeroField extends Component implements Runnable, MouseListener {
             int nposX = e.getX()/64;
             int nposY = e.getY()/64;
             if ((nposY == 1) && ((nposX == 4) || (nposX == 5) || (nposX == 6) || (nposX == 7) || (nposX == 8))) {
-                hero.setArmy(hero.getArmy()[nposX - 4], posX - 4);
-                hero.setArmy(tmp, nposX - 4);
+                if ((hero.getArmy()[nposX - 4] != null) && (tmp.getType() == hero.getArmy()[nposX - 4].getType()) && (posX != nposX)) {
+                    hero.getArmy()[nposX - 4].setCount(hero.getArmy()[nposX - 4].getCount() + tmp.getCount());
+                    hero.getArmy()[posX - 4] = null;
+                } else {
+                    hero.setArmy(hero.getArmy()[nposX - 4], posX - 4);
+                    hero.setArmy(tmp, nposX - 4);
+                }
             }
         }
         repaint();

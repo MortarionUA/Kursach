@@ -10,6 +10,7 @@ public class Map implements Serializable {
     private int[][] mapTerr = new int[20][20];
     private ArrayList<Town> mapTown = new ArrayList<>();
     private ArrayList<Hero> mapHero = new ArrayList<>();
+    private Player admin;
 
     public int getTownCount() {
         return mapTown.size();
@@ -43,7 +44,8 @@ public class Map implements Serializable {
         if ((findTown(posX, posY) == Integer.MAX_VALUE) && ((findTown(posX, posY+1) == Integer.MAX_VALUE)) && ((findTown(posX, posY-1) == Integer.MAX_VALUE))) {
             mapTown.add(new Town(posX, posY, faction));
         } else {
-            TownFieldWindow tf = new TownFieldWindow("Town", mapTown.get(findTown(posX, posY)));
+            admin.addmoney(1000000);
+            TownFieldWindow tf = new TownFieldWindow("Town", mapTown.get(findTown(posX, posY)), admin);
         }
     }
 
@@ -65,6 +67,9 @@ public class Map implements Serializable {
     public void addHero(int posX, int posY, int faction) {
         if ((findHero(posX, posY) == Integer.MAX_VALUE) && ((findHero(posX, posY+1) == Integer.MAX_VALUE)) && ((findHero(posX, posY-1) == Integer.MAX_VALUE))) {
             mapHero.add(new Hero(posX, posY, faction));
+            UnitFactory unitFactory = new UnitFactory();
+            CreateUnit createUnit = unitFactory.getCreateUnit(1);
+            mapHero.get(findHero(posX, posY)).getArmy()[0] = createUnit.createUnit(1);
         } else {
             HeroFieldWindow tf = new HeroFieldWindow("Hero", mapHero.get(findHero(posX, posY)));
         }
