@@ -183,11 +183,9 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
             drawNumber(grph, numbers[player1.getMoney()/100], tW + 16, (14 * tH) + 48);
             drawNumber(grph, numbers[player1.getMoney()%100/10], tW + 32, (14 * tH) + 48);
             drawNumber(grph, numbers[player1.getMoney()%10], tW + 48, (14 * tH) + 48);
-
         } else if(player1.getMoney()/10 >= 1) {
             drawNumber(grph, numbers[player1.getMoney()/10], tW + 32, (14 * tH) + 48);
             drawNumber(grph, numbers[player1.getMoney()%10], tW + 48, (14 * tH) + 48);
-
         } else {
             drawNumber(grph, numbers[player1.getMoney()], tW + 48, (14 * tH) + 48);
         }
@@ -206,11 +204,9 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
             drawNumber(grph, numbers[player2.getMoney()/100], (19 * tW) + 16, 48);
             drawNumber(grph, numbers[player2.getMoney()%100/10], (19 * tW) + 32, 48);
             drawNumber(grph, numbers[player2.getMoney()%10], (19 * tW) + 48, 48);
-
         } else if(player2.getMoney()/10 >= 1) {
             drawNumber(grph, numbers[player2.getMoney()/10], (19 * tW) + 32, 48);
             drawNumber(grph, numbers[player2.getMoney()%10], (19 * tW) + 48, 48);
-
         } else {
             drawNumber(grph, numbers[player2.getMoney()], (19 * tW) + 48, 48);
         }

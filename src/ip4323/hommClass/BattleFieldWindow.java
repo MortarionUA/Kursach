@@ -15,6 +15,7 @@ public class BattleFieldWindow extends Frame {
         ScrollPane pane = new ScrollPane();
 
         pane.setSize(1280, 640);
+        setUndecorated(true);
         setResizable(false);
 
         add(pane, BorderLayout.CENTER);
