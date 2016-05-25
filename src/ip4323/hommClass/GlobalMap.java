@@ -68,7 +68,7 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
     }
 
     public void mInit() throws IOException, ClassNotFoundException {
-        load();
+        load("temp1.out");
         playerFlag = 1;
         dayFlag = 0;
         t = new Thread(this);
@@ -282,15 +282,15 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
     }
 
     public void save() throws IOException {
-        FileOutputStream fos = new FileOutputStream("temp1.out");
+        FileOutputStream fos = new FileOutputStream("save1.out");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(workingMap);
         oos.flush();
         oos.close();
     }
 
-    public void load() throws IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream("temp1.out");
+    public void load(String path) throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream(path);
         ObjectInputStream ois = new ObjectInputStream(fis);
         workingMap = (Map) ois.readObject();
         repaint();
@@ -350,7 +350,7 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
             }
         } else if (i == KeyEvent.VK_F3) {
             try {
-                load();
+                load("save1.out");
             } catch (IOException e1) {
                 e1.printStackTrace();
             } catch (ClassNotFoundException e1) {
@@ -435,7 +435,7 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
      * @param  e MouseEvent
      */
     public void mouseReleased(MouseEvent e) {
-        if ((flagHeroActive != Integer.MAX_VALUE) && (workingMap.findHero(posX, posY) == Integer.MAX_VALUE)) {
+        if ((flagHeroActive != Integer.MAX_VALUE) && ((workingMap.findHero(posX, posY) == Integer.MAX_VALUE) || (workingMap.findHero(posX, posY) == flagHeroActive)) && (highMap[posX][posY] == true)) {
             workingMap.getMapHero().get(flagHeroActive).setPosX(posX);
             workingMap.getMapHero().get(flagHeroActive).setPosY(posY);
             workingMap.getMapHero().get(flagHeroActive).setMoved(false);

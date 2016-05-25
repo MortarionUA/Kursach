@@ -58,7 +58,7 @@ public class BuildingMenu extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(tw != null) {
-                    if (tw.getTown().getBuildFlag() && (player.getMoney() > 1000)) {
+                    if (tw.getTown().getBuildFlag() && (player.getMoney() > pos * 1000)) {
                         tw.getTown().getBuildings()[pos]++;
                         tw.getTown().setBuildFlag(false);
                         player.delmoney(pos * 1000);
@@ -68,7 +68,7 @@ public class BuildingMenu extends JFrame {
                     }
                     tw.repaint();
                 } else {
-                    if (htw.getTown().getBuildFlag() && (player.getMoney() > 1000)) {
+                    if (htw.getTown().getBuildFlag() && (player.getMoney() > pos * 1000)) {
                         htw.getTown().getBuildings()[pos]++;
                         htw.getTown().setBuildFlag(false);
                         player.delmoney(pos * 1000);

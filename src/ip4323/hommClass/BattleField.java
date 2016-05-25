@@ -175,7 +175,7 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
                 drawNumber(grph, numbers[units.get(i).getCount()/10], tempX + 32, tempY + 48);
                 drawNumber(grph, numbers[units.get(i).getCount()%10], tempX + 48, tempY + 48);
 
-            } else {
+            } else if(units.get(i).getCount()/1 >= 1) {
                 drawNumber(grph, numbers[units.get(i).getCount()], tempX + 48, tempY + 48);
             }
         }
@@ -388,6 +388,10 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
             if ((hero2.getArmy()[i] != null) && (hero2.getArmy()[i].getCount() <= 0)) {
                 hero2.getArmy()[i] = null;
             }
+        }
+        for(int i=0; i<units.size(); i++) {
+            if (units.get(i).getCount() <= 0)
+                units.remove(i);
         }
         int temp = 0;
         for(int i=0; i<5; i++) {
