@@ -382,10 +382,10 @@ class BattleField extends Component implements Runnable, ActionListener, MouseLi
         flag++;
         if (flag >= units.size()) flag = 0;
         for(int i=0; i<5; i++) {
-            if ((hero1.getArmy()[i] != null) && (hero1.getArmy()[i].getCount() <= 1)) {
+            if ((hero1.getArmy()[i] != null) && (hero1.getArmy()[i].getCount() <= 0)) {
                 hero1.getArmy()[i] = null;
             }
-            if ((hero2.getArmy()[i] != null) && (hero2.getArmy()[i].getCount() <= 1)) {
+            if ((hero2.getArmy()[i] != null) && (hero2.getArmy()[i].getCount() <= 0)) {
                 hero2.getArmy()[i] = null;
             }
         }

@@ -482,7 +482,7 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
                 workingMap.getMapTown().get(workingMap.findTown(posX, posY)).setFaction(workingMap.getMapHero().get(flagHeroActive).getFaction());
             }
             flagHeroActive = Integer.MAX_VALUE;
-        } else if ((workingMap.findHero(posX, posY) != Integer.MAX_VALUE) && (playerFlag == workingMap.getMapHero().get(workingMap.findHero(posX, posY)).getFaction()) && (workingMap.getMapHero().get(workingMap.findHero(posX, posY)).isMoved() == true)) {
+        } else if ((workingMap.findHero(posX, posY) != Integer.MAX_VALUE) && (playerFlag == workingMap.getMapHero().get(workingMap.findHero(posX, posY)).getFaction()) && (workingMap.getMapHero().get(workingMap.findHero(posX, posY)).isMoved() == true) && (e.getModifiers()== InputEvent.BUTTON1_MASK)) {
             flagHeroActive = workingMap.findHero(posX, posY);
         } else if (buyHeroFlag == 1) {
             if ((playerFlag == 1) && (player1.isHeroBuy() == true) && (workingMap.findTown(posX, posY) != Integer.MAX_VALUE) && (playerFlag == workingMap.getMapTown().get(workingMap.findTown(posX, posY)).getFaction()) && (workingMap.findHero(posX, posY) == Integer.MAX_VALUE)) {
