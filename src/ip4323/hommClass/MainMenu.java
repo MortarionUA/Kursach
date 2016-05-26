@@ -29,20 +29,15 @@ public class MainMenu extends JFrame {
             }
         });
         controlPanel = new JPanel();
-        controlPanel.setLayout(new GridLayout(9, 1));
+        controlPanel.setLayout(new GridLayout(3, 1));
 
         mainFrame.add(controlPanel);
         mainFrame.setVisible(true);
     }
 
     private void showButton() {
-        JButton buttonBattle = new JButton("Battle");
         JButton buttonMapEditor = new JButton("Map Editor");
         JButton buttonExit = new JButton("Exit");
-        JButton buttonTown = new JButton("Town");
-        JButton buttonHeroToHero = new JButton("HeroToHero");
-        JButton buttonHeroToTown = new JButton("HeroToTown");
-        JButton buttonUnit = new JButton("Unit");
         JButton buttonGame = new JButton("Game");
 
         buttonExit.addActionListener(new ActionListener() {
@@ -66,14 +61,6 @@ public class MainMenu extends JFrame {
             }
         });
 
-        buttonTown.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //new TownFieldWindow("Town");
-                mainFrame.dispose();
-            }
-        });
-
         buttonMapEditor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -82,22 +69,8 @@ public class MainMenu extends JFrame {
             }
         });
 
-        buttonUnit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Unit newUnit = new Unit(1, 333);
-                new UnitInfo(newUnit);
-                mainFrame.dispose();
-            }
-        });
-
         controlPanel.add(buttonGame);
-        controlPanel.add(buttonBattle);
         controlPanel.add(buttonMapEditor);
-        controlPanel.add(buttonTown);
-        controlPanel.add(buttonHeroToHero);
-        controlPanel.add(buttonHeroToTown);
-        controlPanel.add(buttonUnit);
         controlPanel.add(buttonExit);
 
         mainFrame.setVisible(true);

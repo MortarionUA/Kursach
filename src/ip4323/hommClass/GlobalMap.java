@@ -390,9 +390,11 @@ public class GlobalMap extends Component implements Runnable, KeyListener, Mouse
             }
         }
         if (temp1 == 0) {
+            WinWindow ww = new WinWindow(2);
             f.dispose();
         }
         if (temp2 == 0) {
+            WinWindow ww = new WinWindow(1);
             f.dispose();
         }
     }
